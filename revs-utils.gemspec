@@ -19,6 +19,7 @@ Gem::Specification.new do |gem|
   
   gem.add_dependency "countries"
   gem.add_dependency "rdf"
+  gem.add_dependency "actionpack", '~> 3'
   
   gem.add_development_dependency "rspec", "~> 2.6"
   gem.add_development_dependency "lyberteam-gems-devel", "> 1.0.0"

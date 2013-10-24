@@ -1,5 +1,6 @@
 require "revs-utils/version"
 require "countries"
+require 'active_support/core_ext/string'
 
 PROJECT_ROOT = File.expand_path(File.dirname(__FILE__) + '/..')
 
@@ -14,26 +15,43 @@ module Revs
       #  This cached set of terms can be re-generated with "ruby devel/revs_lc_automobile_terms.rb"
       AUTOMOBILE_LC_TERMS= File.open(REVS_LC_TERMS_FILENAME,'rb'){|io| Marshal.load(io)} if File.exists?(REVS_LC_TERMS_FILENAME)
 
+      def parse_location(row, location)
+        row[location].split('|').reverse.each do |local|
+          country = revs_get_country(local)
+          city_state = revs_get_city_state(local) 
+          row['country'] = country.strip if country 
+          if city_state
+            row['state'] = revs_get_state_name(city_state[1].strip)
+            row['city'] = city_state[0].strip
+          end
+          if not city_state and not country
+            row['city_section'] = local
+          end
+        end
+
+        return row
+      end
+
+      def revs_check_format(format)
+        return revs_check_formats([format]).first
+      end
+      
       # check the incoming format and fix some common issues
       def revs_check_formats(format)
-        case format.strip
-          when "black-and-white negative"
-            "black-and-white negatives"
-          when "color negative"
-            "color negatives"
-          when "slides/color transparency"
-            "color transparencies"
-          when "color negatives/slides"
-            "color negatives"
-          when "black-and-white negative strips"
-            "black-and-white negatives"
-          when "color transparency"
-            "color transparencies"
-          when "slide"
-            "slides"
-          else
-            format.strip
+        known_fixes = {"black-and-white negative"=>"black-and-white negatives",
+                       "color negative"=>"color negatives",
+                       "slides/color transparency"=>"color transparencies",
+                       "color negatives/slides"=>"color negatives",
+                       "black-and-white negative strips"=>"black-and-white negatives",
+                       "color transparency"=>"color transparencies",
+                       "slide"=>"slides"
+                     }
+        count = 0 
+        format.each do |f|
+          format[count] = known_fixes[f] || f
+          count += 1
         end
+        return format
       end
 
       # lookup the marque sent to see if it matches any known LC terms, trying a few varieties; returns a hash of the term and its ID if match is found, else returns false
