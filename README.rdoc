@@ -1,0 +1,28 @@
+= Revs::Utils
+
+Shared methods and functions used by revs-indexer, pre-assembly and bulk metadata loading code.
+
+== Releases
+- <b>0.0.1</b> Initial release
+
+== Installation
+
+Add this line to your application's Gemfile:
+
+    gem 'revs-utils'
+
+And then execute:
+
+    $ bundle
+
+Or install it yourself as:
+
+    $ gem install revs-utils
+
+== Updating LC Automobile Terms in Gem
+
+1. Check out Gem code.
+2. CD into Gem directory
+3. ruby bin/revs_lc_automobile_terms.rb 
+4. Update Gem in git, bump version number and rake dlss_release
+

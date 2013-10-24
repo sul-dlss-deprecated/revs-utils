@@ -1,0 +1,166 @@
+require "revs-utils/version"
+require "countries"
+
+PROJECT_ROOT = File.expand_path(File.dirname(__FILE__) + '/..')
+
+REVS_LC_TERMS_FILENAME=File.join(PROJECT_ROOT,'files','revs-lc-marque-terms.obj')
+
+module Revs
+  module Utils
+
+      # a hash of LC Subject Heading terms and their IDs for linking for "Automobiles" http://id.loc.gov/authorities/subjects/sh85010201.html
+      # this is cached and loaded from disk and deserialized back into a hash for performance reasons, then stored as a module
+      # level constant so it can be reused throughout the pre-assembly run as a constant
+      #  This cached set of terms can be re-generated with "ruby devel/revs_lc_automobile_terms.rb"
+      AUTOMOBILE_LC_TERMS= File.open(REVS_LC_TERMS_FILENAME,'rb'){|io| Marshal.load(io)} if File.exists?(REVS_LC_TERMS_FILENAME)
+
+      # check the incoming format and fix some common issues
+      def revs_check_formats(format)
+        case format.strip
+          when "black-and-white negative"
+            "black-and-white negatives"
+          when "color negative"
+            "color negatives"
+          when "slides/color transparency"
+            "color transparencies"
+          when "color negatives/slides"
+            "color negatives"
+          when "black-and-white negative strips"
+            "black-and-white negatives"
+          when "color transparency"
+            "color transparencies"
+          when "slide"
+            "slides"
+          else
+            format.strip
+        end
+      end
+
+      # lookup the marque sent to see if it matches any known LC terms, trying a few varieties; returns a hash of the term and its ID if match is found, else returns false
+      def revs_lookup_marque(marque)
+        result=false
+        variants1=[marque,marque.capitalize,marque.singularize,marque.pluralize,marque.capitalize.singularize,marque.capitalize.pluralize]
+        variants2=[]
+        variants1.each do |name| 
+          variants2 << "#{name} automobile" 
+          variants2 << "#{name} automobiles"
+        end
+        (variants1+variants2).each do |variant|
+          lookup_term=AUTOMOBILE_LC_TERMS[variant]
+          if lookup_term
+            result={'url'=>lookup_term,'value'=>variant}
+            break
+          end
+        end
+        return result
+      end # revs_lookup_marque
+
+      # check if the string passed is a country name or code -- if so, return the country name, if not a recognized country, return false
+      def revs_get_country(name)
+        name='US' if name=='USA' # special case; USA is not recognized by the country gem, but US is
+        country=Country.find_country_by_name(name.strip) # find it by name
+        code=Country.new(name.strip) # find it by code
+        if country.nil? && code.data.nil? 
+          return false
+        else
+          return (code.data.nil? ? country.name : code.name)
+        end
+      end # revs_get_country
+
+      # parse a string like this: "San Mateo (Calif.)" to try and figure out if there is any state in there; if found, return the city and state as an array, if none found, return false
+      def revs_get_city_state(name)
+        state_match=name.match(/[(]\S+[)]/)
+        if state_match.nil?
+          return false
+        else
+          first_match=state_match[0]
+          state=first_match.gsub(/[()]/,'').strip # remove parens and strip
+          city=name.gsub(first_match,'').strip # remove state name from input string and strip
+          return [city,state]
+        end
+      end # revs_get_city_state
+
+      # given an abbreviated state name (e.g. "Calif." or "CA") return the full state name (e.g. "California")
+      def revs_get_state_name(name)
+        test_name=name.gsub('.','').strip.downcase
+        us=Country.new('US')
+        us.states.each do |key,value|
+          if value['name'].downcase.start_with?(test_name) || key.downcase == test_name
+            return value['name']
+            break
+          end
+        end
+        return name
+      end # revs_get_state_name
+
+
+      # tell us if the string passed is a valid year
+      def is_valid_year?(date_string)
+        date_string.scan(/\D/).empty? and (1800..Date.today.year).include?(date_string.to_i)
+      end
+
+      # tell us if the string passed is in is a full date of the format M/D/YYYY, and returns the date object if it is valid
+      def get_full_date(date_string)
+        begin
+          return Date.strptime date_string.gsub('-','/').delete(' '), '%m/%d/%Y'
+        rescue
+          false
+        end
+      end
+
+      # given a string with dates separated by commas, split into an array
+      # also, parse dates like "195x" and "1961-62" into all dates in that range
+      def parse_years(date_string)
+        date_string.delete!(' ')
+        if date_string.include?('|')
+          result=date_string.split('|')
+        else
+          result=date_string.split(',')
+        end
+        years_to_add=[]
+        result.each do |year|
+
+          if year.scan(/[1-2][0-9][0-9][0-9][-][0-9][0-9]/).size > 0 # if we have a year that looks like "1961-62" or "1961-73", lets deal with it turning it into [1961,1962] or [1961,1962,1963,1964,1965,1966,1967...etc]
+            start_year=year[2..3]
+            end_year=year[5..6]
+            stem=year[0..1] 
+            for n in start_year..end_year
+              years_to_add << "#{stem}#{n}"
+            end
+          elsif year.scan(/[1-2][0-9][0-9][0-9][-][1-9]/).size > 0 # if we have a year that lloks like "1961-2" or "1961-3", lets deal with it turning it into [1961,1962] or [1961,1962,1963]
+            start_year=year[3..3]
+            end_year=year[5..5]
+            stem=year[0..2]
+            for n in start_year..end_year
+              years_to_add << "#{stem}#{n}"
+            end
+          end
+
+          if year.scan(/[1-2][0-9][0-9][0](('s)|s)/).size > 0 || year.scan(/[1-2][0-9][0-9][x_]/).size > 0 # if we have a year that looks like "195x", let's deal with it by turning it into [1950,1951,1952..etc]
+            result.delete(year) # first delete the year itself from the list
+            stem=year[0..2] # next get the stem, and expand into the whole decade
+            %w{0 1 2 3 4 5 6 7 8 9}.each {|n| years_to_add << "#{stem}#{n}"} # add each year in that decade to the output array
+          end
+
+          if year.scan(/[1-2][0-9][0-9][0-9][-][1-2][0-9][0-9][0-9]/).size > 0 # if we have a year that lloks like "1961-1962" or "1930-1955", lets deal with it turning it into [1961,1962] or [1961,1962,1963]
+            start_year=year[0..3]
+            end_year=year[5..8]
+            if end_year.to_i - start_year.to_i < 10 # let's only do the expansion if we don't have some really large date range, like "1930-1985" .. only ranges less than 9 years will be split into separate years
+              for n in start_year..end_year
+                years_to_add << n
+              end
+            end
+          end
+
+        end
+
+        result = result.uniq
+        result.each do |year|
+          result.delete(year) if not year.scan(/\A[1-2][0-9][0-9][0-9]\z/).size == 1  #If it doesn't fit the format #### remove it
+        end
+        return result.concat(years_to_add).uniq.sort
+
+      end
+
+  end
+end
