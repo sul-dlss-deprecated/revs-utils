@@ -5,6 +5,7 @@ Shared methods and functions used by revs-indexer, pre-assembly and bulk metadat
 == Releases
 - <b>0.0.1</b> Initial release
 - <b>0.0.3</b> Add collection name cleaning method
+- <b>0.0.5</b> Lock down the version of countries gem to avoid problems
 
 == Running tests
 
