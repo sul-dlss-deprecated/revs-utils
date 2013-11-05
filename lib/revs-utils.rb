@@ -15,6 +15,12 @@ module Revs
       #  This cached set of terms can be re-generated with "ruby devel/revs_lc_automobile_terms.rb"
       AUTOMOBILE_LC_TERMS= File.open(REVS_LC_TERMS_FILENAME,'rb'){|io| Marshal.load(io)} if File.exists?(REVS_LC_TERMS_FILENAME)
 
+      def clean_collection_name(name)
+        name.gsub!(/\A(the )/i,'')
+        name.gsub!(/( of the revs institute)\z/i,'')
+        return name.strip
+      end
+      
       def parse_location(row, location)
         row[location].split('|').reverse.each do |local|
           country = revs_get_country(local)

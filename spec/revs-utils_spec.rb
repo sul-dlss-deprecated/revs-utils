@@ -8,6 +8,21 @@ describe "Revs-Utils" do
     
   end
 
+   it "should clean up collection names" do
+     @revs.clean_collection_name('This should be untouched').should == 'This should be untouched'
+     @revs.clean_collection_name('The should be removed').should == 'should be removed'
+     @revs.clean_collection_name('the should be removed').should == 'should be removed'
+     @revs.clean_collection_name('THE should be removed').should == 'should be removed'
+     @revs.clean_collection_name('Should the not be removed').should == 'Should the not be removed'
+     @revs.clean_collection_name('The Dugdale Collection of the Revs Institute').should == 'Dugdale Collection'
+     @revs.clean_collection_name('the Dugdale Collection of the revs institute').should == 'Dugdale Collection'
+     @revs.clean_collection_name('Dugdale Collection of the Revs Institute').should == 'Dugdale Collection'
+     @revs.clean_collection_name('Dugdale Collection OF THE REVS INSTITUTE').should == 'Dugdale Collection' 
+     @revs.clean_collection_name('Dugdale Collection of the Revs institute').should == 'Dugdale Collection'     
+     @revs.clean_collection_name('Revs Institute Dugdale Collection of the Revs Institute').should == 'Revs Institute Dugdale Collection'     
+     @revs.clean_collection_name('of the Revs Institute The Dugdale Collection of the Revs Institute').should == 'of the Revs Institute The Dugdale Collection'     
+   end
+   
    it "should parse locations" do
      row={'other'=>'value','location'=>'123 Street | Palo Alto | United States'}
      @revs.parse_location(row,'location').should == row.merge('city_section'=>'123 Street ','country'=>'United States')
