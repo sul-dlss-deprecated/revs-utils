@@ -9,6 +9,9 @@ describe "Revs-Utils" do
   end
 
    it "should clean up collection names" do
+     @revs.clean_collection_name(nil).should == ""
+     @revs.clean_collection_name("").should == ""
+     @revs.clean_collection_name(123).should == "123"
      @revs.clean_collection_name('This should be untouched').should == 'This should be untouched'
      @revs.clean_collection_name('The should be removed').should == 'should be removed'
      @revs.clean_collection_name('the should be removed').should == 'should be removed'

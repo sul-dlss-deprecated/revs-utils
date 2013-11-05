@@ -16,6 +16,8 @@ module Revs
       AUTOMOBILE_LC_TERMS= File.open(REVS_LC_TERMS_FILENAME,'rb'){|io| Marshal.load(io)} if File.exists?(REVS_LC_TERMS_FILENAME)
 
       def clean_collection_name(name)
+        return "" if name.blank? || name.nil?
+        name=name.to_s
         name.gsub!(/\A(the )/i,'')
         name.gsub!(/( of the revs institute)\z/i,'')
         return name.strip
