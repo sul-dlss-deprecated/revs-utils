@@ -5,6 +5,17 @@ Shared methods and functions used by revs-indexer, pre-assembly and bulk metadat
 == Releases
 - <b>0.0.1</b> Initial release
 
+== Running tests
+
+rake spec
+
+== Release the gem to the gemserver
+
+1. Bump the version number in lib/revs-utils/version.rb
+2. Add to the release notes in this readme.
+3. Ensure the tests pass.
+4. rake dlss_release
+
 == Installation
 
 Add this line to your application's Gemfile:
