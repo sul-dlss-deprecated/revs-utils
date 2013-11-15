@@ -15,6 +15,16 @@ module Revs
       #  This cached set of terms can be re-generated with "ruby devel/revs_lc_automobile_terms.rb"
       AUTOMOBILE_LC_TERMS= File.open(REVS_LC_TERMS_FILENAME,'rb'){|io| Marshal.load(io)} if File.exists?(REVS_LC_TERMS_FILENAME)
 
+      KNOWN_HEADERS_FILE = "config/headers.yml"
+
+      def known_cvs_headers()
+        return YAML.load(File.open("#{Dir.pwd}/#{known_headers_file()}"))
+      end
+      
+      def known_headers_file()
+        return KNOWN_HEADERS_FILE
+      end
+
       def clean_collection_name(name)
         return "" if name.blank? || name.nil?
         name=name.to_s
