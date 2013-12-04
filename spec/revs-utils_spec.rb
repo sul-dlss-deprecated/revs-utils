@@ -127,23 +127,24 @@ describe "Revs-Utils" do
     
   end
   
-  it "should be able to open the known headers file" do
-    file_status = File.exists? "#{Dir.pwd}/#{@revs.known_headers_file()}"
+  it "should be able to read the manifest headers file and load it as a hash" do
+    file_status = File.exists? @revs.manifest_headers_file()
     file_status.should == true 
+    
+    YAML.load(File.open(@revs.manifest_headers_file())).class.should == Hash
   end
   
-  it "should have a list of known headers" do
-     @revs.known_cvs_headers().size.should > 0
+  it "should have a list of headers required for registration in the manifest headers file" do
+    @revs.get_manifest_section(@revs.manifest_register_section_name()).size.should > 0
+    (@revs.get_manifest_section(@revs.manifest_register_section_name()).keys - ["sourceid", "label", "filename"]).should == [] #headers required to register
   end
   
-  it "should only return known header values that are in solr" do
-    solr_keys = [:title, :description, :photographer, :years, :single_year, :full_date, :people, :subjects, :city_section, :city, :state, :country,
-                 :formats, :identifier, :production_notes, :institutional_notes, :metadata_sources, :has_more_metadata, :vehicle_markings, :marque,
-                 :vehicle_model, :model_year, :current_owner, :entrant, :venue, :track, :event, :group_class, :race_data, :priority, :collections,
-                 :collection_names, :highlighted, :visibility_value]
-     known_values = []
-     known_values = @revs.known_cvs_headers().values.map { |s| s.parameterize.underscore.to_sym}
-     (known_values - solr_keys).should == [] 
+  it "should have a list of headers required for metadata in the manifest headers file" do
+     @revs.get_manifest_section(@revs.manifest_metadata_section_name()).size.should > 0
+     (@revs.get_manifest_section(@revs.manifest_metadata_section_name()).keys - ["marque", "model", "people", "entrant", "photographer", "current_owner", "venue", "track", "event",
+            "location", "year", "description", "model_year", "model_year", "group_or_class", "race_data", "metadata_sources",
+            "vehicle_markings", "inst_notes", "prod_notes", "has_more_metadata", "hide"]).should == []
   end
+  
 
 end

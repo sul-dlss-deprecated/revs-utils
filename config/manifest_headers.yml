@@ -1,0 +1,28 @@
+register:
+  label: label
+  sourceid: sourceid
+  filename: filename
+metadata:
+  marque: marque
+  model: model
+  people: people
+  entrant: entrant
+  photographer: photographer
+  current_owner: current_owner
+  venue: venue
+  track: track
+  event: event
+  location: location
+  year: year
+  description: description
+  model_year: model_year
+  group_or_class: group_or_class
+  race_data: race_data
+  metadata_sources: metadata_sources
+  vehicle_markings: vehicle_markings
+  inst_notes: inst_notes
+  prod_notes: prod_notes
+  has_more_metadata: has_more_metadata
+  hide: hide
+  
+  

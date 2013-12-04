@@ -4,25 +4,65 @@ require 'active_support/core_ext/string'
 
 PROJECT_ROOT = File.expand_path(File.dirname(__FILE__) + '/..')
 
+
 REVS_LC_TERMS_FILENAME=File.join(PROJECT_ROOT,'files','revs-lc-marque-terms.obj')
+REVS_MANIFEST_HEADERS_FILEPATH = "#{Dir.pwd}/config/manifest_headers.yml"
+REGISTER = "register"
+METADATA = "metadata"
+
 
 module Revs
   module Utils
-
+    
+      
       # a hash of LC Subject Heading terms and their IDs for linking for "Automobiles" http://id.loc.gov/authorities/subjects/sh85010201.html
       # this is cached and loaded from disk and deserialized back into a hash for performance reasons, then stored as a module
       # level constant so it can be reused throughout the pre-assembly run as a constant
       #  This cached set of terms can be re-generated with "ruby devel/revs_lc_automobile_terms.rb"
       AUTOMOBILE_LC_TERMS= File.open(REVS_LC_TERMS_FILENAME,'rb'){|io| Marshal.load(io)} if File.exists?(REVS_LC_TERMS_FILENAME)
-
-      KNOWN_HEADERS_FILE = "config/headers.yml"
-
-      def known_cvs_headers()
-        return YAML.load(File.open("#{Dir.pwd}/#{known_headers_file()}"))
+      REVS_MANIFEST_HEADERS_FILE = File.open(REVS_MANIFEST_HEADERS_FILEPATH)
+      REVS_MANIFEST_HEADERS = YAML.load( REVS_MANIFEST_HEADERS_FILE)
+      
+      
+      def get_manifest_section(section)
+        return REVS_MANIFEST_HEADERS[section]
       end
       
-      def known_headers_file()
-        return KNOWN_HEADERS_FILE
+      def manifest_headers_file()
+        return REVS_MANIFEST_HEADERS_FILE
+      end
+      
+      def manifest_headers_path()
+        return MAINFEST_HEADERS_FILEPATH
+      end
+      
+      def manifest_register_section_name()
+        return REGISTER
+      end
+      
+      def manifest_metadata_section_name()
+        return METADATA
+      end
+      
+      
+      #Pass this function a CSV file and it will return true if the proper headers are there and each entry has the required fields filled in
+      def valid_to_register(file)
+        
+        #Make sure all the required headers are there
+        return false if not get_manifest_section(REGISTER)-file.headers() == []
+        
+        #Make sure all files have entries for those required headers
+        file.each do |row|
+          get_manifest_section(REGISTER).each do |header|
+            return false if row[header] == nil #Alternatively consider row[header].class != String or row[header].size <= 0
+          end
+        end
+        return true
+      end
+      
+      #This function 
+      def valid_for_metadata(file)
+        return get_manifest_section(METADATA)-file.headers() == []
       end
 
       def clean_collection_name(name)
