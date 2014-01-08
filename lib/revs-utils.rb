@@ -7,7 +7,7 @@ PROJECT_ROOT = File.expand_path(File.dirname(__FILE__) + '/..')
 
 
 REVS_LC_TERMS_FILENAME=File.join(PROJECT_ROOT,'files','revs-lc-marque-terms.obj')
-REVS_MANIFEST_HEADERS_FILEPATH = "#{Dir.pwd}/config/manifest_headers.yml"
+REVS_MANIFEST_HEADERS_FILEPATH = File.join(PROJECT_ROOT,'config',"manifest_headers.yml")
 REGISTER = "register"
 METADATA = "metadata"
 
