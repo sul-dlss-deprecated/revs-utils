@@ -50,8 +50,25 @@ module Revs
       end
       
       #Pass this function a list of all CSVs containing metadata for files you are about to register and it will ensure each sourceid is unique 
-      def unique_source_ids(files)
-        return 0
+      def unique_source_ids(file_paths)
+        files = Array.new
+        file_paths.each do |fp|
+          files << read_csv_with_headers(fp)
+        end
+        
+        sources = Array.new
+        files.each do |file|
+          file.each do |row|
+            #Make sure the sourcid and filename are the same
+            fname = row[get_manifest_section(REGISTER)['filename']].chomp(File.extname(row[get_manifest_section(REGISTER)['filename']]))
+            return false if row[get_manifest_section(REGISTER)['sourceid']] != fname
+            sources << row[get_manifest_section(REGISTER)['sourceid']]
+          end
+          
+          
+         
+        end
+        return sources.uniq.size == sources.size
       
       end
       

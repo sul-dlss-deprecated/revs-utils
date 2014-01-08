@@ -147,21 +147,43 @@ describe "Revs-Utils" do
   end
   
   it "should return when true when given a clean sheet to check for headers required for registration and metadata updating" do
-    clean_sheet = Dir.pwd + "/spec/sample-csv-files/clean-sheet.csv"
-    @revs.valid_to_register(clean_sheet).should == true
-    @revs.valid_for_metadata(clean_sheet).should == true
+    sheet = Dir.pwd + "/spec/sample-csv-files/clean-sheet.csv"
+    @revs.valid_to_register(sheet).should == true
+    @revs.valid_for_metadata(sheet).should == true
   end
   
   it "should return true for registration, but fail for metadata when year is replaced with date" do
-     clean_sheet = Dir.pwd + "/spec/sample-csv-files/date-instead-of-year.csv"
-     @revs.valid_to_register(clean_sheet).should == true
-     @revs.valid_for_metadata(clean_sheet).should == false
+     sheet = Dir.pwd + "/spec/sample-csv-files/date-instead-of-year.csv"
+     @revs.valid_to_register(sheet).should == true
+     @revs.valid_for_metadata(sheet).should == false
   end
   
   it "should return false for registration and metadata when sourceid is not present" do
-    clean_sheet = Dir.pwd + "/spec/sample-csv-files/no-sourceid.csv"
-    @revs.valid_to_register(clean_sheet).should == false
-    @revs.valid_for_metadata(clean_sheet).should == false
+    sheet = Dir.pwd + "/spec/sample-csv-files/no-sourceid.csv"
+    @revs.valid_to_register(sheet).should == false
+    @revs.valid_for_metadata(sheet).should == false
   end
-
+  
+  it "should return false when a row does not have a sourceid" do
+      sheet = Dir.pwd + "/spec/sample-csv-files/blank-sourceid.csv"
+      @revs.valid_to_register(sheet).should == false
+  end
+  
+  it "should return true when each souceid is unique and properly formed from the filename" do
+    sheets = [Dir.pwd + "/spec/sample-csv-files/clean-sheet.csv"]
+    @revs.unique_source_ids(sheets).should == true
+  end
+    
+  it "should return false when there are duplicate sourceids" do
+    sheets = [Dir.pwd + "/spec/sample-csv-files/clean-sheet.csv",Dir.pwd + "/spec/sample-csv-files/clean-sheet.csv"]
+    @revs.unique_source_ids(sheets).should == false
+  end
+  
+  it "should return false when a sourceid is not properly based off the filename" do
+    sheets = [Dir.pwd + "/spec/sample-csv-files/malformed-sourceid.csv"]
+    @revs.unique_source_ids(sheets).should == false
+  end
+    
+  
+ 
 end
