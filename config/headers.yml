@@ -1,8 +1,0 @@
-label: title
-model: vehicle_model
-year: years
-date: years
-format: formats
-collection_name: collection_names
-inst_notes: institutional_notes
-prod_notes: production_notes

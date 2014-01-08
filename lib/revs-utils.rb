@@ -1,6 +1,7 @@
 require "revs-utils/version"
 require "countries"
 require 'active_support/core_ext/string'
+require 'csv'
 
 PROJECT_ROOT = File.expand_path(File.dirname(__FILE__) + '/..')
 
@@ -44,25 +45,38 @@ module Revs
         return METADATA
       end
       
+      def read_csv_with_headers(file)
+         return CSV.parse(File.read(file), :headers => true )
+      end
+      
+      #Pass this function a list of all CSVs containing metadata for files you are about to register and it will ensure each sourceid is unique 
+      def unique_source_ids(files)
+        return 0
+      
+      end
+      
       
       #Pass this function a CSV file and it will return true if the proper headers are there and each entry has the required fields filled in
-      def valid_to_register(file)
+      def valid_to_register(file_path)
         
+        file = read_csv_with_headers(file_path)
         #Make sure all the required headers are there
-        return false if not get_manifest_section(REGISTER)-file.headers() == []
+        return false if not get_manifest_section(REGISTER).values-file.headers() == []
         
         #Make sure all files have entries for those required headers
         file.each do |row|
-          get_manifest_section(REGISTER).each do |header|
+          get_manifest_section(REGISTER).keys.each do |header|
             return false if row[header] == nil #Alternatively consider row[header].class != String or row[header].size <= 0
           end
         end
         return true
       end
       
-      #This function 
-      def valid_for_metadata(file)
-        return get_manifest_section(METADATA)-file.headers() == []
+      #Past this function a CSV file and it will return true if the proper headers are there and each entry has the required fields filled in.  
+      def valid_for_metadata(file_path)
+        file = read_csv_with_headers(file_path)
+        return file.headers()-get_manifest_section(METADATA).values-get_manifest_section(REGISTER).values == []
+        #The file doesn't need to have all the metadata values, it just can't have haders that aren't used for metadata or registration
       end
 
       def clean_collection_name(name)

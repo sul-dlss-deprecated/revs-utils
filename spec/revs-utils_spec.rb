@@ -139,12 +139,29 @@ describe "Revs-Utils" do
     (@revs.get_manifest_section(@revs.manifest_register_section_name()).keys - ["sourceid", "label", "filename"]).should == [] #headers required to register
   end
   
-  it "should have a list of headers required for metadata in the manifest headers file" do
+  it "should have a list of headers required for metadata updating in the manifest headers file" do
      @revs.get_manifest_section(@revs.manifest_metadata_section_name()).size.should > 0
      (@revs.get_manifest_section(@revs.manifest_metadata_section_name()).keys - ["marque", "model", "people", "entrant", "photographer", "current_owner", "venue", "track", "event",
             "location", "year", "description", "model_year", "model_year", "group_or_class", "race_data", "metadata_sources",
-            "vehicle_markings", "inst_notes", "prod_notes", "has_more_metadata", "hide"]).should == []
+            "vehicle_markings", "inst_notes", "prod_notes", "has_more_metadata", "hide", "format", "collection_name"]).should == []
   end
   
+  it "should return when true when given a clean sheet to check for headers required for registration and metadata updating" do
+    clean_sheet = Dir.pwd + "/spec/sample-csv-files/clean-sheet.csv"
+    @revs.valid_to_register(clean_sheet).should == true
+    @revs.valid_for_metadata(clean_sheet).should == true
+  end
+  
+  it "should return true for registration, but fail for metadata when year is replaced with date" do
+     clean_sheet = Dir.pwd + "/spec/sample-csv-files/date-instead-of-year.csv"
+     @revs.valid_to_register(clean_sheet).should == true
+     @revs.valid_for_metadata(clean_sheet).should == false
+  end
+  
+  it "should return false for registration and metadata when sourceid is not present" do
+    clean_sheet = Dir.pwd + "/spec/sample-csv-files/no-sourceid.csv"
+    @revs.valid_to_register(clean_sheet).should == false
+    @revs.valid_for_metadata(clean_sheet).should == false
+  end
 
 end

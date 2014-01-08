@@ -24,5 +24,7 @@ metadata:
   prod_notes: prod_notes
   has_more_metadata: has_more_metadata
   hide: hide
+  format: format
+  collection_name: collection_name
   
   
