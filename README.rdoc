@@ -7,7 +7,8 @@ Shared methods and functions used by revs-indexer, pre-assembly and bulk metadat
 - <b>0.0.3</b> Add collection name cleaning method
 - <b>0.0.5</b> Lock down the version of countries gem to avoid problems
 - <b>0.0.5</b> Lock down the version of countries gem to avoid problems
-- <b>0.0.7</b> Add in helper functions to check the .csv files for registration and metadata updates
+- <b>0.0.7</b> Don't use this version, it uses the wrong method of Dir.pwd to find the root directory for loading assets.
+- <b>0.0.8</b> Add in helper functions to check the .csv files for registration and metadata updates
 
 == Running tests
 
