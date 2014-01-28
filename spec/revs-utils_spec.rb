@@ -25,7 +25,19 @@ describe "Revs-Utils" do
      @revs.clean_collection_name('Revs Institute Dugdale Collection of the Revs Institute').should == 'Revs Institute Dugdale Collection'     
      @revs.clean_collection_name('of the Revs Institute The Dugdale Collection of the Revs Institute').should == 'of the Revs Institute The Dugdale Collection'     
    end
-   
+
+   it "should clean up marque names" do
+     @revs.clean_marque_name(nil).should == ""
+     @revs.clean_marque_name("").should == ""
+     @revs.clean_marque_name(123).should == "123"
+     @revs.clean_marque_name('This should be untouched').should == 'This should be untouched'
+     @revs.clean_marque_name('Ford Automobiles').should == 'Ford'
+     @revs.clean_marque_name('Ford Automobile').should == 'Ford'
+     @revs.clean_marque_name('ford automobiles').should == 'ford'
+     @revs.clean_marque_name('ford automobile').should == 'ford'
+     @revs.clean_marque_name('ford').should == 'ford'
+   end
+      
    it "should parse locations" do
      row={'other'=>'value','location'=>'123 Street | Palo Alto | United States'}
      @revs.parse_location(row,'location').should == row.merge('city_section'=>'123 Street ','country'=>'United States')

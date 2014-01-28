@@ -103,7 +103,15 @@ module Revs
         name.gsub!(/( of the revs institute)\z/i,'')
         return name.strip
       end
-      
+
+      def clean_marque_name(name)
+        return "" if name.blank? || name.nil?
+        name=name.to_s
+        name.gsub!(/(automobiles)\z/i,'')
+        name.gsub!(/(automobile)\z/i,'')
+        return name.strip
+      end
+            
       def parse_location(row, location)
         row[location].split('|').reverse.each do |local|
           country = revs_get_country(local)
