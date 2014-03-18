@@ -60,6 +60,11 @@ describe "Revs-Utils" do
      @revs.revs_check_format('black-and-white negative').should == 'black-and-white negatives'
      @revs.revs_check_format('leave alone').should == 'leave alone'
    end
+
+   it "should clean up some common format errors from that are uppercase and then lower case everything" do 
+     @revs.revs_check_format('Color Transparency').should == 'color transparencies'
+     @revs.revs_check_format('Leave Alone').should == 'leave alone'
+   end
       
    it "should indicate if a date is valid" do
      @revs.get_full_date('bogus').should be_false

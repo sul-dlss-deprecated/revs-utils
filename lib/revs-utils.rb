@@ -1,6 +1,7 @@
 require "revs-utils/version"
 require "countries"
 require 'active_support/core_ext/string'
+require 'active_support/core_ext/hash'
 require 'csv'
 
 PROJECT_ROOT = File.expand_path(File.dirname(__FILE__) + '/..')
@@ -46,7 +47,10 @@ module Revs
       end
       
       def read_csv_with_headers(file)
-         return CSV.parse(File.read(file), :headers => true )
+        # load CSV into an array of hashes, allowing UTF-8 to pass through, deleting blank columns
+        file_contents = IO.read(file).force_encoding("ISO-8859-1").encode("utf-8", replace: nil) 
+        csv = CSV.parse(file_contents, :headers => true)
+        return csv.map { |row| row.to_hash.with_indifferent_access }
       end
       
       #Pass this function a list of all CSVs containing metadata for files you are about to register and it will ensure each sourceid is unique 
@@ -78,7 +82,7 @@ module Revs
         
         file = read_csv_with_headers(file_path)
         #Make sure all the required headers are there
-        return false if not get_manifest_section(REGISTER).values-file.headers() == []
+        return false if not get_manifest_section(REGISTER).values-file[0].keys == []
         
         #Make sure all files have entries for those required headers
         file.each do |row|
@@ -92,7 +96,7 @@ module Revs
       #Past this function a CSV file and it will return true if the proper headers are there and each entry has the required fields filled in.  
       def valid_for_metadata(file_path)
         file = read_csv_with_headers(file_path)
-        return file.headers()-get_manifest_section(METADATA).values-get_manifest_section(REGISTER).values == []
+        return file[0].keys-get_manifest_section(METADATA).values-get_manifest_section(REGISTER).values == []
         #The file doesn't need to have all the metadata values, it just can't have haders that aren't used for metadata or registration
       end
 
@@ -145,7 +149,7 @@ module Revs
                      }
         count = 0 
         format.each do |f|
-          format[count] = known_fixes[f] || f
+          format[count] = known_fixes[f.downcase] || f.downcase
           count += 1
         end
         return format
