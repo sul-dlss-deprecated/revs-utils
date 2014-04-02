@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    revs-utils (1.0.0)
+    revs-utils (1.0.1)
       actionpack (~> 3)
       countries (= 0.9.2)
       rdf
