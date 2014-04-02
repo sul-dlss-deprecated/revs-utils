@@ -70,6 +70,7 @@ describe "Revs-Utils" do
      @revs.get_full_date('bogus').should be_false
      @revs.get_full_date('5/1/1959').should == Date.strptime("5/1/1959", '%m/%d/%Y')
      @revs.get_full_date('5-1-1959').should == Date.strptime("5/1/1959", '%m/%d/%Y')
+     @revs.get_full_date('5-1-59').should be_false # two digit year is not allowed
    end
 
    it "should indicate if we have a valid year" do
