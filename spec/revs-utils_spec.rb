@@ -76,7 +76,8 @@ describe "Revs-Utils" do
    it "should indicate if we have a valid year" do
      @revs.is_valid_year?('1959').should be_true
      @revs.is_valid_year?('bogus').should be_false
-     @revs.is_valid_year?('1700').should be_false # tool old! no cars even existed yet
+     @revs.is_valid_year?('1700').should be_false # too old! no cars even existed yet
+     @revs.is_valid_year?('1700',1600).should be_true # unless we allow it to be ok
   end
    
    

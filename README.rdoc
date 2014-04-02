@@ -12,6 +12,7 @@ Shared methods and functions used by revs-indexer, pre-assembly and bulk metadat
 - <b>0.0.9</b> Add in a clean marque function
 - <b>1.0.0</b> Make format fixing case insensitive; add a method for loading CSV files with UTF-8 compliance
 - <b>1.0.1</b> Remove a couple methods from Revs code and update the methods to make them consistent in gem
+- <b>1.0.2 and 1.0.3</b> Make invalid two digit years in dates return as false
 
 == Running tests
 
