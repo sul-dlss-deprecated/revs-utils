@@ -50,7 +50,8 @@ module Revs
       
       def read_csv_with_headers(file)
         # load CSV into an array of hashes, allowing UTF-8 to pass through, deleting blank columns
-        file_contents = IO.read(file).force_encoding("ISO-8859-1").encode("utf-8", replace: nil) 
+        #file_contents = IO.read(file).force_encoding("ISO-8859-1").encode("utf-8", replace: nil) 
+        file_contents = IO.read(file)
         csv = CSV.parse(file_contents, :headers => true)
         return csv.map { |row| row.to_hash.with_indifferent_access }
       end
