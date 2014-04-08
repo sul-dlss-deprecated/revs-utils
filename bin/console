@@ -5,4 +5,12 @@ require 'irb'
 
 require File.expand_path(File.dirname(__FILE__) + '/../config/boot')
 
+
+class RevsUtils
+  
+  include Revs::Utils
+  extend Revs::Utils
+  
+end
+
 IRB.start

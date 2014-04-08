@@ -42,6 +42,11 @@ describe "Revs-Utils" do
      row={'other'=>'value','location'=>'123 Street | Palo Alto | United States'}
      @revs.parse_location(row,'location').should == row.merge('city_section'=>'123 Street ','country'=>'United States')
    end
+
+   it "should parse locations with comma delimiter" do
+     row={'other'=>'value','location'=>'Paris, France'}
+     @revs.parse_location(row,'location').should == row.merge('city_section'=>'Paris','country'=>'France')
+   end
    
    it "should lookup marques" do
      @revs.revs_lookup_marque('Ford').should == {"url"=>"http://id.loc.gov/authorities/subjects/sh85050464", "value"=>"Ford automobile"}

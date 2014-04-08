@@ -120,7 +120,7 @@ module Revs
       end
             
       def parse_location(row, location)
-        row[location].split('|').reverse.each do |local|
+        row[location].split(/[,|]/).reverse.each do |local|
           country = revs_get_country(local)
           city_state = revs_get_city_state(local) 
           row['country'] = country.strip if country 
