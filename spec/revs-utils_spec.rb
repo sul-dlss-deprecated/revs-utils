@@ -106,8 +106,9 @@ describe "Revs-Utils" do
      @revs.revs_get_state_name('calif').should == "California"       
      @revs.revs_get_state_name('Ind').should == "Indiana"       
      @revs.revs_get_state_name('Bogus').should == "Bogus"
+     @revs.revs_get_state_name('IN').should == "Indiana"       
+     @revs.revs_get_state_name('IN').should == "Indiana"       
    end
-     
   
   it "should parse 1950s correctly" do
     
