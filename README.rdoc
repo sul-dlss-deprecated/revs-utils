@@ -26,7 +26,8 @@ rake spec
 1. Bump the version number in lib/revs-utils/version.rb
 2. Add to the release notes in this readme.
 3. Ensure the tests pass.
-4. rake dlss_release
+4. Git commit and push
+5. rake dlss_release
 
 == Installation
 
