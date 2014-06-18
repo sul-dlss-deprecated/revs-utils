@@ -89,11 +89,11 @@ module Revs
         
         #Make sure all files have entries for those required headers
         file.each do |row|
-          get_manifest_section(REGISTER).keys.each do |header|
-            return false if row[header] == nil #Alternatively consider row[header].class != String or row[header].size <= 0
+          get_manifest_section(REGISTER).keys.each do |header| # label should be there as a column but does not always need a value
+            return false if header.downcase !='label' && row[header].blank? #Alternatively consider row[header].class != String or row[header].size <= 0
           end
         end
-        return true
+       return true
       end
       
       #Pass this function a CSV file and it will return true if the proper headers are there and each entry has the required fields filled in.  

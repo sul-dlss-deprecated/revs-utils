@@ -177,10 +177,22 @@ describe "Revs-Utils" do
     @revs.valid_for_metadata(sheet).should == true
   end
   
-  it "should return true for registration, and should be ok even if date and year exist" do
+  it "should return true for registration, and should be ok for metadata if date exists instead of year" do
      sheet = Dir.pwd + "/spec/sample-csv-files/date-instead-of-year.csv"
      @revs.valid_to_register(sheet).should == true
      @revs.valid_for_metadata(sheet).should == true
+  end
+
+  it "should return true for registration if label column exists but some values are blank" do
+     sheet = Dir.pwd + "/spec/sample-csv-files/blank-label.csv"
+     @revs.valid_to_register(sheet).should == true
+     sheet = Dir.pwd + "/spec/sample-csv-files/no-blank-label.csv"
+     @revs.valid_to_register(sheet).should == true     
+  end
+
+  it "should return false for registration if label column does not exist" do
+     sheet = Dir.pwd + "/spec/sample-csv-files/no-label-column.csv"
+     @revs.valid_to_register(sheet).should == false
   end
  
   it "should return true for registration, and should be ok for metadata even if year exists, but not date" do
