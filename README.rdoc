@@ -15,6 +15,7 @@ Shared methods and functions used by revs-indexer, pre-assembly and bulk metadat
 - <b>1.0.2 and 1.0.3</b> Make invalid two digit years in dates return as false
 - <b>1.0.4</b> Revs-Utils now assumes .csv files are in UTF-8 format instead of Latin-1
 - <b>1.0.5</b> Parse location using commas as well as pipes
+- <b>1.0.6</b> Add some more conditions to CSV header checks
 
 == Running tests
 

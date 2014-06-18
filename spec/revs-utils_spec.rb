@@ -167,7 +167,7 @@ describe "Revs-Utils" do
   it "should have a list of headers required for metadata updating in the manifest headers file" do
      @revs.get_manifest_section(@revs.manifest_metadata_section_name()).size.should > 0
      (@revs.get_manifest_section(@revs.manifest_metadata_section_name()).keys - ["marque", "model", "people", "entrant", "photographer", "current_owner", "venue", "track", "event",
-            "location", "year", "description", "model_year", "model_year", "group_or_class", "race_data", "metadata_sources",
+            "location", "year", "description", "model_year", "model_year", "group_or_class", "race_data", "metadata_sources","state", "country", "city", "date",
             "vehicle_markings", "inst_notes", "prod_notes", "has_more_metadata", "hide", "format", "collection_name"]).should == []
   end
   
@@ -177,12 +177,36 @@ describe "Revs-Utils" do
     @revs.valid_for_metadata(sheet).should == true
   end
   
-  it "should return true for registration, but fail for metadata when year is replaced with date" do
+  it "should return true for registration, and should be ok even if date and year exist" do
      sheet = Dir.pwd + "/spec/sample-csv-files/date-instead-of-year.csv"
+     @revs.valid_to_register(sheet).should == true
+     @revs.valid_for_metadata(sheet).should == true
+  end
+ 
+  it "should return true for registration, and should be ok for metadata even if year exists, but not date" do
+     sheet = Dir.pwd + "/spec/sample-csv-files/date-instead-of-year.csv"
+     @revs.valid_to_register(sheet).should == true
+     @revs.valid_for_metadata(sheet).should == true
+  end
+
+  it "should return true for registration, and should NOT be ok for metadata if both year and date exist" do
+     sheet = Dir.pwd + "/spec/sample-csv-files/date-and-year.csv"
      @revs.valid_to_register(sheet).should == true
      @revs.valid_for_metadata(sheet).should == false
   end
-  
+
+  it "should return true for registration, and should NOT be ok for metadata if both location and specific location fields exist" do
+     sheet = Dir.pwd + "/spec/sample-csv-files/location-and-other-fields.csv"
+     @revs.valid_to_register(sheet).should == true
+     @revs.valid_for_metadata(sheet).should == false
+  end
+     
+  it "should return false for registration and metadata when source_id is mislabeled" do
+    sheet = Dir.pwd + "/spec/sample-csv-files/bad-source_id.csv"
+    @revs.valid_to_register(sheet).should == false
+    @revs.valid_for_metadata(sheet).should == false
+  end
+
   it "should return false for registration and metadata when sourceid is not present" do
     sheet = Dir.pwd + "/spec/sample-csv-files/no-sourceid.csv"
     @revs.valid_to_register(sheet).should == false

@@ -96,11 +96,18 @@ module Revs
         return true
       end
       
-      #Past this function a CSV file and it will return true if the proper headers are there and each entry has the required fields filled in.  
+      #Pass this function a CSV file and it will return true if the proper headers are there and each entry has the required fields filled in.  
       def valid_for_metadata(file_path)
         file = read_csv_with_headers(file_path)
-        return file[0].keys-get_manifest_section(METADATA).values-get_manifest_section(REGISTER).values == []
-        #The file doesn't need to have all the metadata values, it just can't have haders that aren't used for metadata or registration
+        file_headers=file[0].keys
+        #The file doesn't need to have all the metadata values, it just can't have headers that aren't used for metadata or registration
+        if file_headers.include?('date') && file_headers.include?('year') # can't have both date and year 
+          return false
+        elsif file_headers.include?('location') && file_headers.include?('state') && file_headers.include?('city') && file_headers.include?('country') # can't have both location and the specific fields
+          return false
+        else
+          return file_headers-get_manifest_section(METADATA).values-get_manifest_section(REGISTER).values == []
+        end
       end
 
       def clean_collection_name(name)
