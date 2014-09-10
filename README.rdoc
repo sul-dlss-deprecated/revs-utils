@@ -17,6 +17,7 @@ Shared methods and functions used by revs-indexer, pre-assembly and bulk metadat
 - <b>1.0.5</b> Parse location using commas as well as pipes
 - <b>1.0.6</b> Add some more conditions to CSV header checks
 - <b>1.0.7</b> Label column needs to be there but does not need to have a value to register
+- <b>1.0.8</b> Update clean_collection_name method to deal with other possible names
 
 == Running tests
 

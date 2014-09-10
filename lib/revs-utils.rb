@@ -115,6 +115,9 @@ module Revs
         name=name.to_s
         name.gsub!(/\A(the )/i,'')
         name.gsub!(/( of the revs institute)\z/i,'')
+        name.gsub!(/( of the revs institute for automotive research)\z/i,'')
+        name.gsub!(/( of the revs institute for automotive research, inc)\z/i,'')
+        name.gsub!(/( of the revs institute for automotive research, inc.)\z/i,'')
         return name.strip
       end
 

@@ -21,7 +21,10 @@ describe "Revs-Utils" do
      @revs.clean_collection_name('the Dugdale Collection of the revs institute').should == 'Dugdale Collection'
      @revs.clean_collection_name('Dugdale Collection of the Revs Institute').should == 'Dugdale Collection'
      @revs.clean_collection_name('Dugdale Collection OF THE REVS INSTITUTE').should == 'Dugdale Collection' 
-     @revs.clean_collection_name('Dugdale Collection of the Revs institute').should == 'Dugdale Collection'     
+     @revs.clean_collection_name('Dugdale Collection of The Revs Institute').should == 'Dugdale Collection'     
+     @revs.clean_collection_name('Dugdale Collection of the Revs institute for Automotive Research, Inc.').should == 'Dugdale Collection'     
+     @revs.clean_collection_name('Dugdale Collection of the Revs Institute for Automotive Research, Inc').should == 'Dugdale Collection'
+     @revs.clean_collection_name('Dugdale Collection of Some Other Institute for Automotive Research, Inc').should == 'Dugdale Collection of Some Other Institute for Automotive Research, Inc'     
      @revs.clean_collection_name('Revs Institute Dugdale Collection of the Revs Institute').should == 'Revs Institute Dugdale Collection'     
      @revs.clean_collection_name('of the Revs Institute The Dugdale Collection of the Revs Institute').should == 'of the Revs Institute The Dugdale Collection'     
    end
