@@ -18,6 +18,7 @@ Shared methods and functions used by revs-indexer, pre-assembly and bulk metadat
 - <b>1.0.6</b> Add some more conditions to CSV header checks
 - <b>1.0.7</b> Label column needs to be there but does not need to have a value to register
 - <b>1.0.8</b> Update clean_collection_name method to deal with other possible names
+- <b>2.0.0</b> Updating to use ActionPack 4 for Rails 4 applications.  For Rails 3, continue to use 1.x.y releases.  
 
 == Running tests
 
