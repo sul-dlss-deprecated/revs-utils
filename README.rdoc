@@ -22,7 +22,7 @@ Shared methods and functions used by revs-indexer, pre-assembly and bulk metadat
 
 == Running tests
 
-rake spec
+./bin/run_all_tests
 
 == Release the gem to the gemserver
 
