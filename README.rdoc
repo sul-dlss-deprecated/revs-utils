@@ -30,7 +30,13 @@ Shared methods and functions used by revs-indexer, pre-assembly and bulk metadat
 2. Add to the release notes in this readme.
 3. Ensure the tests pass.
 4. Git commit and push
-5. rake dlss_release
+5. Build the gem:
+
+gem build revs-utils.gemspec
+
+6. Release the gem to RubyGems:
+
+gem push revs-utils-1.0.8.gem  # substitute actual version number
 
 == Installation
 
