@@ -146,17 +146,20 @@ module Revs
         return row
       end
 
+      # check a single format single and fix some common issues
       def revs_check_format(format)
         return revs_check_formats([format]).first
       end
       
-      # check the incoming format and fix some common issues
+      # check the incoming array of formats and fix some common issues
       def revs_check_formats(format)
         known_fixes = {"black-and-white negative"=>"black-and-white negatives",
                        "color negative"=>"color negatives",
                        "slides/color transparency"=>"color transparencies",
                        "color negatives/slides"=>"color negatives",
                        "black-and-white negative strips"=>"black-and-white negatives",
+                       "black and white"=>"black-and-white negatives",
+                       "black-and-white"=>"black-and-white negatives",                       
                        "black and white negative"=>"black-and-white negatives",
                        "black and white negatives"=>"black-and-white negatives",
                        "color transparency"=>"color transparencies",

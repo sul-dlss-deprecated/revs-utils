@@ -62,6 +62,7 @@ describe "Revs-Utils" do
    
    it "should clean up some common format errors from an array" do 
      @revs.revs_check_formats(['black-and-white negative','color negative','leave alone']).should == ['black-and-white negatives','color negatives','leave alone']
+     @revs.revs_check_formats(['black and white','color negative','black-and-white negative']).should == ['black-and-white negatives','color negatives','black-and-white negatives']
    end
 
    it "should clean up some common format errors from a string" do 
