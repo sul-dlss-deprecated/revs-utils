@@ -22,7 +22,7 @@ Shared methods and functions used by revs-indexer, pre-assembly and bulk metadat
 
 == Running tests
 
-rake spec
+bundle exec rspec spec
 
 == Release the gem to the gemserver
 
@@ -30,7 +30,13 @@ rake spec
 2. Add to the release notes in this readme.
 3. Ensure the tests pass.
 4. Git commit and push
-5. rake dlss_release
+5. Build the gem:
+
+gem build revs-utils.gemspec
+
+6. Release the gem to RubyGems:
+
+gem push revs-utils-1.0.9.gem  # substitute actual version number
 
 == Installation
 
