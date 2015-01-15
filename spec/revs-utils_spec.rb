@@ -56,12 +56,12 @@ describe "Revs-Utils" do
      @revs.revs_lookup_marque('Fords').should == {"url"=>"http://id.loc.gov/authorities/subjects/sh85050464", "value"=>"Ford automobile"}
      @revs.revs_lookup_marque('Ford Automobiles').should == {"url"=>"http://id.loc.gov/authorities/subjects/sh85050464", "value"=>"Ford automobile"}
      @revs.revs_lookup_marque('Porsche').should == {"url"=>"http://id.loc.gov/authorities/subjects/sh85105037", "value"=>"Porsche automobiles"}
-     @revs.revs_lookup_marque('Bogus').should be_false
-     @revs.revs_lookup_marque('').should be_false
+     @revs.revs_lookup_marque('Bogus').should be_falsey
+     @revs.revs_lookup_marque('').should be_falsey
    end
    
    it "should clean up some common format errors from an array" do 
-     @revs.revs_check_formats(['black-and-white negative','color negative','leave alone']).should == ['black-and-white negatives','color negatives','leave alone']
+     @revs.revs_check_formats(['black and white','color negative','black-and-white negative']).should == ['black-and-white negatives','color negatives','black-and-white negatives']
    end
 
    it "should clean up some common format errors from a string" do 
@@ -75,17 +75,17 @@ describe "Revs-Utils" do
    end
       
    it "should indicate if a date is valid" do
-     @revs.get_full_date('bogus').should be_false
+     @revs.get_full_date('bogus').should be_falsey
      @revs.get_full_date('5/1/1959').should == Date.strptime("5/1/1959", '%m/%d/%Y')
      @revs.get_full_date('5-1-1959').should == Date.strptime("5/1/1959", '%m/%d/%Y')
-     @revs.get_full_date('5-1-59').should be_false # two digit year is not allowed
+     @revs.get_full_date('5-1-59').should be_falsey # two digit year is not allowed
    end
 
    it "should indicate if we have a valid year" do
-     @revs.is_valid_year?('1959').should be_true
-     @revs.is_valid_year?('bogus').should be_false
-     @revs.is_valid_year?('1700').should be_false # too old! no cars even existed yet
-     @revs.is_valid_year?('1700',1600).should be_true # unless we allow it to be ok
+     @revs.is_valid_year?('1959').should be_truthy
+     @revs.is_valid_year?('bogus').should be_falsey
+     @revs.is_valid_year?('1700').should be_falsey # too old! no cars even existed yet
+     @revs.is_valid_year?('1700',1600).should be_truthy # unless we allow it to be ok
   end
    
    
@@ -94,12 +94,12 @@ describe "Revs-Utils" do
      @revs.revs_get_country('US').should == "United States"
      @revs.revs_get_country('United States').should == "United States"
      @revs.revs_get_country('italy').should == "Italy"
-     @revs.revs_get_country('Bogus').should be_false
+     @revs.revs_get_country('Bogus').should be_falsey
    end
 
    it "should parse a city/state correctly" do
      @revs.revs_get_city_state('San Mateo (Calif.)').should == ['San Mateo','Calif.']
-     @revs.revs_get_city_state('San Mateo').should be_false
+     @revs.revs_get_city_state('San Mateo').should be_falsey
      @revs.revs_get_city_state('Indianapolis (Ind.)').should == ['Indianapolis','Ind.']
    end
 

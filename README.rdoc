@@ -19,10 +19,11 @@ Shared methods and functions used by revs-indexer, pre-assembly and bulk metadat
 - <b>1.0.7</b> Label column needs to be there but does not need to have a value to register
 - <b>1.0.8</b> Update clean_collection_name method to deal with other possible names
 - <b>2.0.0</b> Updating to use ActionPack 4 for Rails 4 applications.  For Rails 3, continue to use 1.x.y releases.  
+- <b>2.0.1</b> Add more common format corrections
 
 == Running tests
 
-./bin/run_all_tests
+bundle exec rake spec
 
 == Release the gem to the gemserver
 
@@ -36,7 +37,7 @@ gem build revs-utils.gemspec
 
 6. Release the gem to RubyGems:
 
-gem push revs-utils-1.0.8.gem  # substitute actual version number
+gem push revs-utils-2.0.1.gem  # substitute actual version number
 
 == Installation
 

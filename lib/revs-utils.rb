@@ -157,6 +157,10 @@ module Revs
                        "slides/color transparency"=>"color transparencies",
                        "color negatives/slides"=>"color negatives",
                        "black-and-white negative strips"=>"black-and-white negatives",
+                       "black and white"=>"black-and-white negatives",
+                       "black-and-white"=>"black-and-white negatives",                       
+                       "black and white negative"=>"black-and-white negatives",
+                       "black and white negatives"=>"black-and-white negatives",
                        "color transparency"=>"color transparencies",
                        "slide"=>"slides"
                      }
