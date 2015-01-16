@@ -99,7 +99,7 @@ module Revs
       #Pass this function a CSV file and it will return true if the proper headers are there and each entry has the required fields filled in.  
       def valid_for_metadata(file_path)
         file = read_csv_with_headers(file_path)
-        file_headers=file[0].keys
+        file_headers=file[0].keys.reject!(&:blank?).collect!(&:downcase)
         #The file doesn't need to have all the metadata values, it just can't have headers that aren't used for metadata or registration
         if file_headers.include?('date') && file_headers.include?('year') # can't have both date and year 
           return false
