@@ -21,6 +21,7 @@ Shared methods and functions used by revs-indexer, pre-assembly and bulk metadat
 - <b>2.0.0</b> Updating to use ActionPack 4 for Rails 4 applications.  For Rails 3, continue to use 1.x.y releases.  
 - <b>2.0.1</b> Add more common format corrections
 - <b>2.0.2 and 2.0.3</b> Update valid for metadata method so it is not sensitive to blank or uppercase columns
+- <b>2.0.4</b> Fix issues with year parsing
 
 == Running tests
 

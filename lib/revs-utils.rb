@@ -257,14 +257,14 @@ module Revs
         years_to_add=[]
         result.each do |year|
 
-          if year.scan(/[1-2][0-9][0-9][0-9][-][0-9][0-9]/).size > 0 # if we have a year that looks like "1961-62" or "1961-73", lets deal with it turning it into [1961,1962] or [1961,1962,1963,1964,1965,1966,1967...etc]
+          if year.scan(/[1-2][0-9][0-9][0-9][-][0-9][0-9]/).size > 0 && year.size == 7 # if we have a year that looks like "1961-62" or "1961-73", lets deal with it turning it into [1961,1962] or [1961,1962,1963,1964,1965,1966,1967...etc]
             start_year=year[2..3]
             end_year=year[5..6]
             stem=year[0..1] 
             for n in start_year..end_year
               years_to_add << "#{stem}#{n}"
             end
-          elsif year.scan(/[1-2][0-9][0-9][0-9][-][1-9]/).size > 0 # if we have a year that lloks like "1961-2" or "1961-3", lets deal with it turning it into [1961,1962] or [1961,1962,1963]
+          elsif year.scan(/[1-2][0-9][0-9][0-9][-][1-9]/).size > 0 && year.size == 6 # if we have a year that lloks like "1961-2" or "1961-3", lets deal with it turning it into [1961,1962] or [1961,1962,1963]
             start_year=year[3..3]
             end_year=year[5..5]
             stem=year[0..2]
@@ -279,7 +279,7 @@ module Revs
             %w{0 1 2 3 4 5 6 7 8 9}.each {|n| years_to_add << "#{stem}#{n}"} # add each year in that decade to the output array
           end
 
-          if year.scan(/[1-2][0-9][0-9][0-9][-][1-2][0-9][0-9][0-9]/).size > 0 # if we have a year that lloks like "1961-1962" or "1930-1955", lets deal with it turning it into [1961,1962] or [1961,1962,1963]
+          if year.scan(/[1-2][0-9][0-9][0-9][-][1-2][0-9][0-9][0-9]/).size > 0 && year.size == 9 # if we have a year that lloks like "1961-1962" or "1930-1955", lets deal with it turning it into [1961,1962] or [1961,1962,1963]
             start_year=year[0..3]
             end_year=year[5..8]
             if end_year.to_i - start_year.to_i < 10 # let's only do the expansion if we don't have some really large date range, like "1930-1985" .. only ranges less than 9 years will be split into separate years
