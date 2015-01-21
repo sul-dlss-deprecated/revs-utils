@@ -138,6 +138,12 @@ describe "Revs-Utils" do
     
   end
 
+  it "should parse 1800-1802" do
+    
+    @revs.parse_years('1800-1802').should == ['1800','1801','1802']    
+    
+  end
+  
   it "should parse 1955-1957 | 1955 | 1955 and not produce duplicate years" do
     
     @revs.parse_years('1955-1957 | 1955 | 1955').should == ['1955','1956','1957']    

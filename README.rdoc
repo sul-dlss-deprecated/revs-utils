@@ -20,6 +20,7 @@ Shared methods and functions used by revs-indexer, pre-assembly and bulk metadat
 - <b>1.0.8</b> Update clean_collection_name method to deal with other possible names
 - <b>1.0.9</b> Add more common format corrections
 - <b>1.0.10</b> Update valid for metadata method so it is not sensitive to blank or uppercase columns
+- <b>1.0.11</b> Fix issues with year parsing
 
 == Running tests
 
