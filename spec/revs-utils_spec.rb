@@ -83,6 +83,9 @@ describe "Revs-Utils" do
      @revs.get_full_date('1/1/71').should == Date.strptime("1/1/1971", '%m/%d/%Y') # deal with two digit years ok too
      @revs.get_full_date('5-1-14').should == Date.strptime("5/1/2014", '%m/%d/%Y') # deal with two digit years ok too     
      @revs.get_full_date('5-1-21').should == Date.strptime("5/1/1921", '%m/%d/%Y') # deal with two digit years ok too     
+     @revs.get_full_date('1966-02-27').should == Date.strptime("2/27/1966", '%m/%d/%Y') # deal with alternate formats
+     @revs.get_full_date('1966-2-5').should == Date.strptime("2/5/1966", '%m/%d/%Y') # deal with alternate formats
+     @revs.get_full_date('1966-14-11').should be_false
      @revs.get_full_date('bogus').should be_false
    end
 
