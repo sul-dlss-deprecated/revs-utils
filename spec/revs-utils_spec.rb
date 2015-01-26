@@ -75,10 +75,14 @@ describe "Revs-Utils" do
    end
       
    it "should indicate if a date is valid" do
-     @revs.get_full_date('bogus').should be_falsey
      @revs.get_full_date('5/1/1959').should == Date.strptime("5/1/1959", '%m/%d/%Y')
      @revs.get_full_date('5-1-1959').should == Date.strptime("5/1/1959", '%m/%d/%Y')
-     @revs.get_full_date('5-1-59').should be_falsey # two digit year is not allowed
+     @revs.get_full_date('5-1-2014').should == Date.strptime("5/1/2014", '%m/%d/%Y')
+     @revs.get_full_date('5-1-59').should == Date.strptime("5/1/1959", '%m/%d/%Y') # deal with two digit years ok too
+     @revs.get_full_date('1/1/71').should == Date.strptime("1/1/1971", '%m/%d/%Y') # deal with two digit years ok too
+     @revs.get_full_date('5-1-14').should == Date.strptime("5/1/2014", '%m/%d/%Y') # deal with two digit years ok too     
+     @revs.get_full_date('5-1-21').should == Date.strptime("5/1/1921", '%m/%d/%Y') # deal with two digit years ok too     
+     @revs.get_full_date('bogus').should be_falsey
    end
 
    it "should indicate if we have a valid year" do
