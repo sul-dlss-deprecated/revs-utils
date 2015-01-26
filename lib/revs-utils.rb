@@ -5,6 +5,7 @@ require "countries"
 require 'active_support/core_ext/string'
 require 'active_support/core_ext/hash'
 require 'csv'
+require 'chronic'
 
 PROJECT_ROOT = File.expand_path(File.dirname(__FILE__) + '/..')
 
@@ -238,9 +239,7 @@ module Revs
       # tell us if the string passed is in is a full date of the format M/D/YYYY or m-d-yyyy or m-d-yy or M/D/YY, and returns the date object if it is valid
       def get_full_date(date_string)
         begin
-          date_obj_string=date_string.gsub('-','/').delete(' ')
-          date_format = (date_obj_string.split('/').last.size == 4 ? '%m/%d/%Y' : '%m/%d/%y') # if we think we have a 4 digit year, parse with 4 year format, else try the two year format
-          date_obj = Date.strptime(date_obj_string, date_format)
+          date_obj=Chronic.parse(date_string).to_date
           date_obj=date_obj.prev_year(100) if date_obj > Date.today # if the parsing yields a date in the future, this is a problem, so adjust back a century (due to this issue: http://stackoverflow.com/questions/27058068/ruby-incorrectly-parses-2-digit-year)
           is_valid_year?(date_obj.year.to_s) ? date_obj : false
         rescue
