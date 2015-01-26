@@ -76,17 +76,30 @@ describe "Revs-Utils" do
    end
       
    it "should indicate if a date is valid" do
+     
+     # formats that are ok
      @revs.get_full_date('5/1/1959').should == Date.strptime("5/1/1959", '%m/%d/%Y')
      @revs.get_full_date('5-1-1959').should == Date.strptime("5/1/1959", '%m/%d/%Y')
      @revs.get_full_date('5-1-2014').should == Date.strptime("5/1/2014", '%m/%d/%Y')
-     @revs.get_full_date('5-1-59').should == Date.strptime("5/1/1959", '%m/%d/%Y') # deal with two digit years ok too
-     @revs.get_full_date('1/1/71').should == Date.strptime("1/1/1971", '%m/%d/%Y') # deal with two digit years ok too
-     @revs.get_full_date('5-1-14').should == Date.strptime("5/1/2014", '%m/%d/%Y') # deal with two digit years ok too     
-     @revs.get_full_date('5-1-21').should == Date.strptime("5/1/1921", '%m/%d/%Y') # deal with two digit years ok too     
-     @revs.get_full_date('1966-02-27').should == Date.strptime("2/27/1966", '%m/%d/%Y') # deal with alternate formats
-     @revs.get_full_date('1966-2-5').should == Date.strptime("2/5/1966", '%m/%d/%Y') # deal with alternate formats
-     @revs.get_full_date('1966-14-11').should be_false
-     @revs.get_full_date('bogus').should be_false
+     @revs.get_full_date('5-1-59').should == Date.strptime("5/1/1959", '%m/%d/%Y') 
+     @revs.get_full_date('1/1/71').should == Date.strptime("1/1/1971", '%m/%d/%Y') 
+     @revs.get_full_date('5-1-14').should == Date.strptime("5/1/2014", '%m/%d/%Y')     
+     @revs.get_full_date('5-1-21').should == Date.strptime("5/1/1921", '%m/%d/%Y')     
+     @revs.get_full_date('1966-02-27').should == Date.strptime("2/27/1966", '%m/%d/%Y')  
+     @revs.get_full_date('1966-2-5').should == Date.strptime("2/5/1966", '%m/%d/%Y')  
+     
+     # bad full dates
+     @revs.get_full_date('1966-14-11').should be_false # bad month
+     @revs.get_full_date('1966\4\11').should be_false # slashes are the wrong way
+     @revs.get_full_date('bogus').should be_false # crap string
+     @revs.get_full_date('').should be_false # blank
+     @revs.get_full_date('1965').should be_false # only the year
+     @revs.get_full_date('1965-68').should be_false # range of years
+     @revs.get_full_date('1965,1968').should be_false # multiple years
+     @revs.get_full_date('1965|1968').should be_false # multiple years
+     @revs.get_full_date('1965-1968').should be_false # multiple years
+     @revs.get_full_date('1965-8').should be_false # multiple years
+
    end
 
    it "should indicate if we have a valid year" do

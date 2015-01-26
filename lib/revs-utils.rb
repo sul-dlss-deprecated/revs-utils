@@ -240,6 +240,7 @@ module Revs
       # tell us if the string passed is in is a full date of the format M/D/YYYY or m-d-yyyy or m-d-yy or M/D/YY, and returns the date object if it is valid
       def get_full_date(date_string)
         begin
+          return false if date_string.scan(/(-|\/)/).count < 2 # we need at least two / or - characters to count as a full date
           date_obj=Chronic.parse(date_string).to_date
           date_obj=date_obj.prev_year(100) if date_obj > Date.today # if the parsing yields a date in the future, this is a problem, so adjust back a century (due to this issue: http://stackoverflow.com/questions/27058068/ruby-incorrectly-parses-2-digit-year)
           is_valid_year?(date_obj.year.to_s) ? date_obj : false

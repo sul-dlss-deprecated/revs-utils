@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    revs-utils (1.0.12)
+    revs-utils (1.0.13)
       actionpack (~> 3)
       chronic
       countries (= 0.9.2)
