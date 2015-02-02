@@ -137,6 +137,7 @@ describe "Revs-Utils" do
   it "should parse 1950s correctly" do
     
     @revs.parse_years('1950s').should == ['1950','1951','1952','1953','1954','1955','1956','1957','1958','1959']    
+    @revs.parse_years("1950's").should == ['1950','1951','1952','1953','1954','1955','1956','1957','1958','1959']    
     
   end
 
