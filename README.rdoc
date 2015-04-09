@@ -18,21 +18,14 @@ Shared methods and functions used by revs-indexer, pre-assembly and bulk metadat
 - <b>1.0.6</b> Add some more conditions to CSV header checks
 - <b>1.0.7</b> Label column needs to be there but does not need to have a value to register
 - <b>1.0.8</b> Update clean_collection_name method to deal with other possible names
-<<<<<<< HEAD
 - <b>2.0.0</b> Updating to use ActionPack 4 for Rails 4 applications.  For Rails 3, continue to use 1.x.y releases.  
 - <b>2.0.1</b> Add more common format corrections
 - <b>2.0.2 and 2.0.3</b> Update valid for metadata method so it is not sensitive to blank or uppercase columns
 - <b>2.0.4</b> Fix issues with year parsing
-=======
-- <b>1.0.9</b> Add more common format corrections
-- <b>1.0.10</b> Update valid for metadata method so it is not sensitive to blank or uppercase columns
-- <b>1.0.11</b> Fix issues with year parsing
-- <b>1.0.12</b> Allow two digit years in year formatting
->>>>>>> 9db8640... Allow two digit years in year formatting
 
 == Running tests
 
-bundle exec rake spec
+bundle exec rspec spec
 
 == Release the gem to the gemserver
 
@@ -47,6 +40,7 @@ gem build revs-utils.gemspec
 6. Release the gem to RubyGems:
 
 gem push revs-utils-2.0.1.gem  # substitute actual version number
+
 
 == Installation
 

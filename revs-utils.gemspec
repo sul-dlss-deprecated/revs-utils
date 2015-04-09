@@ -11,7 +11,8 @@ Gem::Specification.new do |gem|
   gem.description   = "Shared methods and functions used by revs-indexer, pre-assembly and bulk metadata loading code."
   gem.summary       = "Shared methods and functions used by revs-indexer, pre-assembly and bulk metadata loading code."
   gem.homepage      = ""
-
+  gem.license       = "All rights reserved, Stanford University."
+  
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})

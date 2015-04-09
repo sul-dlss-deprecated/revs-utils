@@ -14,7 +14,7 @@ REVS_LC_TERMS_FILENAME=File.join(PROJECT_ROOT,'files','revs-lc-marque-terms.obj'
 REVS_MANIFEST_HEADERS_FILEPATH = File.join(PROJECT_ROOT,'config',"manifest_headers.yml")
 REGISTER = "register"
 METADATA = "metadata"
-
+FORMATS = "known_formats"
 
 module Revs
   module Utils
@@ -28,6 +28,9 @@ module Revs
       REVS_MANIFEST_HEADERS_FILE = File.open(REVS_MANIFEST_HEADERS_FILEPATH)
       REVS_MANIFEST_HEADERS = YAML.load( REVS_MANIFEST_HEADERS_FILE)
       
+      def revs_known_formats
+        get_manifest_section(FORMATS)
+      end
       
       def get_manifest_section(section)
         return REVS_MANIFEST_HEADERS[section]
@@ -67,40 +70,59 @@ module Revs
         sources = Array.new
         files.each do |file|
           file.each do |row|
-            #Make sure the sourcid and filename are the same
+            #Make sure the sourceid and filename are the same
             fname = row[get_manifest_section(REGISTER)['filename']].chomp(File.extname(row[get_manifest_section(REGISTER)['filename']]))
             return false if row[get_manifest_section(REGISTER)['sourceid']] != fname
             sources << row[get_manifest_section(REGISTER)['sourceid']]
-          end
-          
-          
-         
+          end         
         end
         return sources.uniq.size == sources.size
       
       end
-      
-      
+            
       #Pass this function a CSV file and it will return true if the proper headers are there and each entry has the required fields filled in
       def valid_to_register(file_path)
-        
         file = read_csv_with_headers(file_path)
-        #Make sure all the required headers are there
-        return false if not get_manifest_section(REGISTER).values-file[0].keys == []
-        
-        #Make sure all files have entries for those required headers
-        file.each do |row|
-          get_manifest_section(REGISTER).keys.each do |header| # label should be there as a column but does not always need a value
-            return false if header.downcase !='label' && row[header].blank? #Alternatively consider row[header].class != String or row[header].size <= 0
-          end
-        end
-       return true
+        return check_valid_to_register(file)
       end
       
       #Pass this function a CSV file and it will return true if the proper headers are there and each entry has the required fields filled in.  
       def valid_for_metadata(file_path)
         file = read_csv_with_headers(file_path)
-        file_headers=file[0].keys.reject(&:blank?).collect(&:downcase)
+        return check_headers(file)
+      end
+      
+      # pass in csv data and it will tell if you everything is safe to register based on having labels, unique sourceIDs and filenames matching sourceIDs
+      def check_valid_to_register(csv_data)
+        #Make sure all the required headers are there
+        return false if not get_manifest_section(REGISTER).values-csv_data[0].keys == []
+        sources=Array.new
+        #Make sure all files have entries for those required headers
+        csv_data.each do |row|
+          get_manifest_section(REGISTER).keys.each do |header| # label should be there as a column but does not always need a value
+            return false if header.downcase !='label' && row[header].blank? #Alternatively consider row[header].class != String or row[header].size <= 0
+          end
+          fname = row[get_manifest_section(REGISTER)['filename']].chomp(File.extname(row[get_manifest_section(REGISTER)['filename']]))
+          return false if row[get_manifest_section(REGISTER)['sourceid']] != fname
+          sources << row[get_manifest_section(REGISTER)['sourceid']]
+        end
+        return sources.uniq.size == sources.size
+      end
+      
+      # looks at certain metadata fields in manifest to confirm validity (such as dates and formats)
+      def check_metadata(csv_data)
+        bad_rows=0
+        csv_data.each do |row|
+          valid_date=revs_is_valid_datestring?(row[get_manifest_section(METADATA)['year']] || row[get_manifest_section(METADATA)['date']])
+          valid_format=revs_is_valid_format?(row[get_manifest_section(METADATA)['format']])
+          bad_rows+=1 unless (valid_date && valid_format)
+        end
+        return bad_rows
+      end
+      
+      # pass in csv data from a file read in and it will tell you if the headers are valid
+      def check_headers(csv_data)
+        file_headers=csv_data[0].keys.reject(&:blank?).collect(&:downcase)
         #The file doesn't need to have all the metadata values, it just can't have headers that aren't used for metadata or registration
         if file_headers.include?('date') && file_headers.include?('year') # can't have both date and year 
           return false
@@ -110,7 +132,7 @@ module Revs
           return file_headers-get_manifest_section(METADATA).values-get_manifest_section(REGISTER).values == []
         end
       end
-
+      
       def clean_collection_name(name)
         return "" if name.blank? || name.nil?
         name=name.to_s
@@ -147,11 +169,19 @@ module Revs
         return row
       end
 
+      # checks to see if we have a valid format
+      def revs_is_valid_format?(format)
+        return true if format.nil? || format.blank?
+        formats=format.split("|").collect{|f| f.strip}
+        !formats.collect {|f| revs_known_formats.include?(f)}.uniq.include?(false)
+      end
+      
+      # check a single format and fix some common issues
       def revs_check_format(format)
         return revs_check_formats([format]).first
       end
       
-      # check the incoming format and fix some common issues
+      # check the incoming array of formats and fix some common issues
       def revs_check_formats(format)
         known_fixes = {"black-and-white negative"=>"black-and-white negatives",
                        "color negative"=>"color negatives",
@@ -163,7 +193,8 @@ module Revs
                        "black and white negative"=>"black-and-white negatives",
                        "black and white negatives"=>"black-and-white negatives",
                        "color transparency"=>"color transparencies",
-                       "slide"=>"slides"
+                       "slide"=>"slides",
+                       "color transparancies"=>"color transparencies"
                      }
         count = 0 
         format.each do |f|
@@ -236,6 +267,14 @@ module Revs
         date_string.to_s.strip.scan(/\D/).empty? and (starting_year..Date.today.year).include?(date_string.to_i)
       end
 
+      # tell us if the incoming datestring supplied in the manifest column is a valid date, year or list of years
+      def revs_is_valid_datestring?(date_string)
+        return true if date_string.nil? || date_string.empty?
+        is_full_date=(get_full_date(date_string) != false)
+        is_year=!parse_years(date_string).empty?
+        return is_year || is_full_date
+      end
+      
       # tell us if the string passed is in is a full date of the format M/D/YYYY or m-d-yyyy or m-d-yy or M/D/YY, and returns the date object if it is valid
       def get_full_date(date_string)
         begin

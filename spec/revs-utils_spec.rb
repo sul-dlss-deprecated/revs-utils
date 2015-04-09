@@ -61,6 +61,7 @@ describe "Revs-Utils" do
    end
    
    it "should clean up some common format errors from an array" do 
+     @revs.revs_check_formats(['black-and-white negative','color negative','leave alone']).should == ['black-and-white negatives','color negatives','leave alone']
      @revs.revs_check_formats(['black and white','color negative','black-and-white negative']).should == ['black-and-white negatives','color negatives','black-and-white negatives']
    end
 
@@ -98,6 +99,11 @@ describe "Revs-Utils" do
      @revs.get_full_date('1965|1968').should be_falsey# multiple years
      @revs.get_full_date('1965-1968').should be_falsey# multiple years
      @revs.get_full_date('1965-8').should be_falsey# multiple years
+     @revs.get_full_date('5-1-14').should == Date.strptime("5/1/2014", '%m/%d/%Y')     
+     @revs.get_full_date('5-1-21').should == Date.strptime("5/1/1921", '%m/%d/%Y')     
+     @revs.get_full_date('1966-02-27').should == Date.strptime("2/27/1966", '%m/%d/%Y')  
+     @revs.get_full_date('1966-2-5').should == Date.strptime("2/5/1966", '%m/%d/%Y')  
+
    end
 
    it "should indicate if we have a valid year" do
@@ -106,7 +112,29 @@ describe "Revs-Utils" do
      @revs.is_valid_year?('1700').should be_falsey # too old! no cars even existed yet
      @revs.is_valid_year?('1700',1600).should be_truthy # unless we allow it to be ok
   end
-   
+
+  it "should indicate if we have unknown formats" do
+    @revs.revs_is_valid_format?(nil).should be_truthy
+    @revs.revs_is_valid_format?('').should be_truthy    
+    @revs.revs_is_valid_format?('slides').should be_truthy
+    @revs.revs_is_valid_format?('slide').should be_falsey
+    @revs.revs_is_valid_format?('slides | slide').should be_falsey
+    @revs.revs_is_valid_format?('slides | black-and-white negatives').should be_truthy
+    @revs.revs_is_valid_format?('black-and-white-negatives').should be_falsey
+    @revs.revs_is_valid_format?('black-and-white negatives').should be_truthy   
+  end
+  
+  it "should indicate if we have a valid datestring" do
+    @revs.revs_is_valid_datestring?('1959').should be_truthy
+    @revs.revs_is_valid_datestring?('bogus').should be_falsey
+    @revs.revs_is_valid_datestring?('').should be_truthy
+    @revs.revs_is_valid_datestring?(nil).should be_truthy
+    @revs.revs_is_valid_datestring?([]).should be_truthy
+    @revs.revs_is_valid_datestring?('2/2/1950').should be_truthy
+    @revs.revs_is_valid_datestring?('2/31/1950').should be_falsey
+    @revs.revs_is_valid_datestring?('2/2/50').should be_truthy
+    @revs.revs_is_valid_datestring?('195x').should be_truthy
+ end   
    
    it "should lookup the country correctly" do
      @revs.revs_get_country('USA').should == "United States"
@@ -157,6 +185,12 @@ describe "Revs-Utils" do
     
   end
 
+  it "should parse 1800-1802" do
+    
+    @revs.parse_years('1800-1802').should == ['1800','1801','1802']    
+    
+  end
+  
   it "should parse 1955-1957 | 1955 | 1955 and not produce duplicate years" do
     
     @revs.parse_years('1955-1957 | 1955 | 1955').should == ['1955','1956','1957']    
