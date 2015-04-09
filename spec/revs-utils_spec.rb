@@ -99,10 +99,6 @@ describe "Revs-Utils" do
      @revs.get_full_date('1965|1968').should be_falsey# multiple years
      @revs.get_full_date('1965-1968').should be_falsey# multiple years
      @revs.get_full_date('1965-8').should be_falsey# multiple years
-     @revs.get_full_date('5-1-14').should == Date.strptime("5/1/2014", '%m/%d/%Y')     
-     @revs.get_full_date('5-1-21').should == Date.strptime("5/1/1921", '%m/%d/%Y')     
-     @revs.get_full_date('1966-02-27').should == Date.strptime("2/27/1966", '%m/%d/%Y')  
-     @revs.get_full_date('1966-2-5').should == Date.strptime("2/5/1966", '%m/%d/%Y')  
 
    end
 
