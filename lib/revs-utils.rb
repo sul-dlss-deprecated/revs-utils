@@ -193,7 +193,8 @@ module Revs
                        "black and white negative"=>"black-and-white negatives",
                        "black and white negatives"=>"black-and-white negatives",
                        "color transparency"=>"color transparencies",
-                       "slide"=>"slides"
+                       "slide"=>"slides",
+                       "color transparancies"=>"color transparencies"
                      }
         count = 0 
         format.each do |f|
