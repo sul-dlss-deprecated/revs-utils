@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    revs-utils (1.0.14)
+    revs-utils (1.0.15)
       actionpack (~> 3)
       chronic
       countries (= 0.9.2)
@@ -42,14 +42,14 @@ GEM
       rake (>= 0.8.7)
       rest-client
     mime-types (2.0)
-    multi_json (1.10.1)
+    multi_json (1.11.0)
     rack (1.4.5)
     rack-cache (1.2)
       rack (>= 0.4)
     rack-test (0.6.3)
       rack (>= 1.0)
     rake (10.1.0)
-    rdf (1.1.7)
+    rdf (1.1.11)
       link_header (~> 0.0, >= 0.0.8)
     rest-client (1.6.7)
       mime-types (>= 1.16)

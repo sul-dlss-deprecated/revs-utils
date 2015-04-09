@@ -30,5 +30,15 @@ metadata:
   hide: hide
   format: format
   collection_name: collection_name
-  
-  
+known_formats: 
+  - black-and-white film
+  - color film
+  - slides
+  - foldouts
+  - pamphlets
+  - oversize items
+  - photographic prints
+  - black-and-white negatives
+  - color negatives
+  - black-and-white transparencies
+  - color transparencies

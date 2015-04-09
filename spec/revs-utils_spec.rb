@@ -108,7 +108,27 @@ describe "Revs-Utils" do
      @revs.is_valid_year?('1700').should be_false # too old! no cars even existed yet
      @revs.is_valid_year?('1700',1600).should be_true # unless we allow it to be ok
   end
-   
+
+  it "should indicate if we have unknown formats" do
+    @revs.revs_is_valid_format?('slides').should be_true
+    @revs.revs_is_valid_format?('slide').should be_false
+    @revs.revs_is_valid_format?('slides | slide').should be_false
+    @revs.revs_is_valid_format?('slides | black-and-white negatives').should be_true
+    @revs.revs_is_valid_format?('black-and-white-negatives').should be_false
+    @revs.revs_is_valid_format?('black-and-white negatives').should be_true   
+  end
+  
+  it "should indicate if we have a valid datestring" do
+    @revs.revs_is_valid_datestring?('1959').should be_true
+    @revs.revs_is_valid_datestring?('bogus').should be_false
+    @revs.revs_is_valid_datestring?('').should be_true
+    @revs.revs_is_valid_datestring?(nil).should be_true
+    @revs.revs_is_valid_datestring?([]).should be_true
+    @revs.revs_is_valid_datestring?('2/2/1950').should be_true
+    @revs.revs_is_valid_datestring?('2/31/1950').should be_false
+    @revs.revs_is_valid_datestring?('2/2/50').should be_true
+    @revs.revs_is_valid_datestring?('195x').should be_true
+ end   
    
    it "should lookup the country correctly" do
      @revs.revs_get_country('USA').should == "United States"
