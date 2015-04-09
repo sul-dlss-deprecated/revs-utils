@@ -110,6 +110,8 @@ describe "Revs-Utils" do
   end
 
   it "should indicate if we have unknown formats" do
+    @revs.revs_is_valid_format?(nil).should be_true
+    @revs.revs_is_valid_format?('').should be_true    
     @revs.revs_is_valid_format?('slides').should be_true
     @revs.revs_is_valid_format?('slide').should be_false
     @revs.revs_is_valid_format?('slides | slide').should be_false

@@ -171,6 +171,7 @@ module Revs
 
       # checks to see if we have a valid format
       def revs_is_valid_format?(format)
+        return true if format.nil? || format.blank?
         formats=format.split("|").collect{|f| f.strip}
         !formats.collect {|f| revs_known_formats.include?(f)}.uniq.include?(false)
       end
