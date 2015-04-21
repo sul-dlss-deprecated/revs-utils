@@ -72,7 +72,7 @@ module Revs
           file.each do |row|
             #Make sure the sourceid and filename are the same
             fname = row[get_manifest_section(REGISTER)['filename']].chomp(File.extname(row[get_manifest_section(REGISTER)['filename']]))
-            return false if row[get_manifest_section(REGISTER)['sourceid']] != fname
+            return false if ((row[get_manifest_section(REGISTER)['sourceid']] != fname) || ((/\s/ =~ row[get_manifest_section(REGISTER)['sourceid']].strip) != nil))  
             sources << row[get_manifest_section(REGISTER)['sourceid']]
           end         
         end
@@ -103,7 +103,7 @@ module Revs
             return false if header.downcase !='label' && row[header].blank? #Alternatively consider row[header].class != String or row[header].size <= 0
           end
           fname = row[get_manifest_section(REGISTER)['filename']].chomp(File.extname(row[get_manifest_section(REGISTER)['filename']]))
-          return false if row[get_manifest_section(REGISTER)['sourceid']] != fname
+          return false if ((row[get_manifest_section(REGISTER)['sourceid']] != fname) || ((/\s/ =~ row[get_manifest_section(REGISTER)['sourceid']].strip) != nil))  
           sources << row[get_manifest_section(REGISTER)['sourceid']]
         end
         return sources.uniq.size == sources.size

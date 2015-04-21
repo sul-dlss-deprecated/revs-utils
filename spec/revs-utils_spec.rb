@@ -297,7 +297,11 @@ describe "Revs-Utils" do
     sheets = [Dir.pwd + "/spec/sample-csv-files/malformed-sourceid.csv"]
     @revs.unique_source_ids(sheets).should == false
   end
-    
+
+  it "should return false when a sourceid has a space in it" do
+    sheets = [Dir.pwd + "/spec/sample-csv-files/space-sourceid.csv"]
+    @revs.unique_source_ids(sheets).should == false
+  end    
   
  
 end
