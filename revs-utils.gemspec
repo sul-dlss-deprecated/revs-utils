@@ -20,7 +20,7 @@ Gem::Specification.new do |gem|
   
   gem.add_dependency "countries", "0.9.2"
   gem.add_dependency "rdf"
-  gem.add_dependency "actionpack", '~> 4.1.6'
+  gem.add_dependency "actionpack", '>= 4.1.6'
   gem.add_dependency "chronic"
   
   gem.add_development_dependency "rspec", "~> 2.6"
