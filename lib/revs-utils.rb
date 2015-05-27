@@ -88,7 +88,7 @@ module Revs
         end
 
         # now we will account for the location, which has a weighting of 3 for *any* location like field having a value
-        location_score = (revs_location(doc_hash).blank? && doc_hash[:venue][:field].blank? && doc_hash[:event][:field].blank?) ? 0 : 1
+        location_score = (revs_location(doc_hash).blank? && doc_hash[:venue].blank? && doc_hash[:event].blank?) ? 0 : 1
         location_weight = 3
         total_weights += location_weight
         total_score += (location_score * location_weight)
