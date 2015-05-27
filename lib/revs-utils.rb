@@ -80,7 +80,7 @@ module Revs
 
         total_score=0
         total_weights=0
-        field_mappings.each do |field_name,field_config|
+        revs_field_mappings.each do |field_name,field_config|
           if !field_config[:weight].blank?
             total_score += field_config[:weight].to_f * (blank_value?(doc_hash[field_config[:field]]) ? 0 : 1) # if the field is blank, it is a 0 regardless of weight, otherwise it is a 1 times its weight
             total_weights += field_config[:weight].to_f
@@ -96,7 +96,12 @@ module Revs
         return ((total_score/total_weights)*100).ceil
 
       end
-            
+
+      # tells you if have a blank value or an array that has just blank values
+      def blank_value?(value)
+         value.class == Array ? !value.delete_if(&:blank?).any? : value.blank? 
+      end
+                  
       def revs_known_formats
         get_manifest_section(FORMATS)
       end
