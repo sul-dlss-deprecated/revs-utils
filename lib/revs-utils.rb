@@ -72,7 +72,7 @@ module Revs
 
       # these are used in the revs solr document in the main revs digital library rails app, as well as the revs-indexing-service app
       def revs_location(doc_hash)
-        [doc_hash[:city_section_ssi],doc_hash[:cities_ssi],doc_hash[:states_ssi],doc_hash[:countries_ssi]].reject(&:blank?).join(', ')
+        [doc_hash[:city_sections_ssi],doc_hash[:cities_ssi],doc_hash[:states_ssi],doc_hash[:countries_ssi]].reject(&:blank?).join(', ')
       end  
   
       # these are used in the revs solr document in the main revs digital library rails app, as well as the revs-indexing-service app

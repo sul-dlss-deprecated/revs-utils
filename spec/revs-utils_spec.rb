@@ -156,6 +156,13 @@ describe "Revs-Utils" do
      @revs.revs_get_state_name('IN').should == "Indiana"       
    end
   
+   it "should parse locations" do
+     @revs.revs_location({:cities_ssi=>'Paris',:countries_ssi=>'France'}).should == 'Paris, France'
+     @revs.revs_location({:id=>'123',:title_tsi=>'Test'}).should == ''
+     @revs.revs_location({:city_sections_ssi=>'Rue Cool 123',:cities_ssi=>'Paris',:countries_ssi=>'France'}).should == 'Rue Cool 123, Paris, France'
+     @revs.revs_location({:city_sections_ssi=>'Cool Street',:cities_ssi=>'Paris',:states_ssi=>'Texas',:countries_ssi=>'USA'}).should == 'Cool Street, Paris, Texas, USA'
+   end
+   
   it "should parse 1950s and 1950's correctly" do
     
     @revs.parse_years('1950s').should == ['1950','1951','1952','1953','1954','1955','1956','1957','1958','1959']    
