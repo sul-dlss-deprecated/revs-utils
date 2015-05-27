@@ -18,8 +18,7 @@ FORMATS = "known_formats"
 
 module Revs
   module Utils
-    
-      
+        
       # a hash of LC Subject Heading terms and their IDs for linking for "Automobiles" http://id.loc.gov/authorities/subjects/sh85010201.html
       # this is cached and loaded from disk and deserialized back into a hash for performance reasons, then stored as a module
       # level constant so it can be reused throughout the pre-assembly run as a constant
@@ -27,7 +26,77 @@ module Revs
       AUTOMOBILE_LC_TERMS= File.open(REVS_LC_TERMS_FILENAME,'rb'){|io| Marshal.load(io)} if File.exists?(REVS_LC_TERMS_FILENAME)
       REVS_MANIFEST_HEADERS_FILE = File.open(REVS_MANIFEST_HEADERS_FILEPATH)
       REVS_MANIFEST_HEADERS = YAML.load( REVS_MANIFEST_HEADERS_FILE)
-      
+  
+      # these are used in the revs solr document in the main revs digital library rails app, as well as the revs-indexing-service app
+      def revs_field_mappings
+        {
+          :title=>{:field=>'title_tsi',:default=>'Untitled'},
+          :description=>{:field=>'description_tsim', :multi_valued => true, :weight => 3},
+          :photographer=>{:field=>'photographer_ssi', :weight => 1},
+          :years=>{:field=>'pub_year_isim', :multi_valued => true, :weight => 5},
+          :single_year=>{:field=>'pub_year_single_isi'},
+          :full_date=>{:field=>'pub_date_ssi'},
+          :people=>{:field=>'people_ssim', :multi_valued => true, :weight => 4},
+          :subjects=>{:field=>'subjects_ssim', :multi_valued => true, :weight => 1},
+          :city_section=>{:field=>'city_sections_ssi'},
+          :city=>{:field=>'cities_ssi'},
+          :state=>{:field=>'states_ssi'},
+          :country=>{:field=>'countries_ssi'},
+          :formats=>{:field=>'format_ssim', :multi_valued => true},
+          :identifier=>{:field=>'source_id_ssi'},
+          :production_notes=>{:field=>'prod_notes_tsi'},
+          :institutional_notes=>{:field=>'inst_notes_tsi'},
+          :metadata_sources=>{:field=>'metadata_sources_tsi'},
+          :has_more_metadata=>{:field=>'has_more_metadata_ssi'},
+          :vehicle_markings=>{:field=>'vehicle_markings_tsi', :weight => 1},
+          :marque=>{:field=>'marque_ssim', :multi_valued => true, :weight => 4},
+          :vehicle_model=>{:field=>'model_ssim', :multi_valued => true, :weight => 2},
+          :model_year=>{:field=>'model_year_ssim', :multi_valued => true, :weight => 1},
+          :current_owner=>{:field=>'current_owner_tsi', :weight => 1},
+          :entrant=>{:field=>'entrant_ssim', :multi_valued => true, :weight => 1},
+          :venue=>{:field=>'venue_ssi'},
+          :track=>{:field=>'track_ssi', :weight => 1},
+          :event=>{:field=>'event_ssi'},
+          :group_class=>{:field=>'group_class_tsi', :weight => 1},
+          :race_data=>{:field=>'race_data_tsi', :weight => 1},
+          :priority=>{:field=>'priority_isi',:default=>0,:editstore=>false},
+          :collections=>{:field=>'is_member_of_ssim', :multi_valued => true},
+          :collection_names=>{:field=>'collection_ssim', :multi_valued => true,:editstore=>false},
+          :archive_name=>{:field=>'archive_ssi',:editstore=>false},
+          :highlighted=>{:field=>'highlighted_ssi',:editstore=>false},
+          :visibility_value=>{:field=>'visibility_isi',:editstore=>false},
+          :score=>{:field=>'score_isi', :editstore=>false},
+          :timestamp=>{:field=>'timestamp', :editstore=>false}
+        }  
+      end  
+
+      # these are used in the revs solr document in the main revs digital library rails app, as well as the revs-indexing-service app
+      def revs_location(doc_hash)
+        [doc_hash[:city_section_ssi],doc_hash[:cities_ssi],doc_hash[:states_ssi],doc_hash[:countries_ssi]].reject(&:blank?).join(', ')
+      end  
+  
+      # these are used in the revs solr document in the main revs digital library rails app, as well as the revs-indexing-service app
+      def revs_compute_score(doc_hash)
+
+        total_score=0
+        total_weights=0
+        field_mappings.each do |field_name,field_config|
+          if !field_config[:weight].blank?
+            total_score += field_config[:weight].to_f * (blank_value?(doc_hash[field_config[:field]]) ? 0 : 1) # if the field is blank, it is a 0 regardless of weight, otherwise it is a 1 times its weight
+            total_weights += field_config[:weight].to_f
+          end
+        end
+
+        # now we will account for the location, which has a weighting of 3 for *any* location like field having a value
+        location_score = (revs_location(doc_hash).blank? && doc_hash[:venue][:field].blank? && doc_hash[:event][:field].blank?) ? 0 : 1
+        location_weight = 3
+        total_weights += location_weight
+        total_score += (location_score * location_weight)
+    
+        return ((total_score/total_weights)*100).ceil
+
+      end
+            
       def revs_known_formats
         get_manifest_section(FORMATS)
       end

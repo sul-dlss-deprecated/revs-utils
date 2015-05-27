@@ -23,6 +23,7 @@ Shared methods and functions used by revs-indexer, pre-assembly and bulk metadat
 - <b>2.0.2 and 2.0.3</b> Update valid for metadata method so it is not sensitive to blank or uppercase columns
 - <b>2.0.4</b> Fix issues with year parsing
 - <b>2.0.10</b> Update to latest version of actionpack
+- <b>2.1.0</b> Add field mapping and other common methods used in both revs digital library and revs-indexing
 
 == Running tests
 
