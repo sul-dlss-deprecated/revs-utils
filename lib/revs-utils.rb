@@ -37,7 +37,7 @@ module Revs
           :single_year=>{:field=>'pub_year_single_isi'},
           :full_date=>{:field=>'pub_date_ssi'},
           :people=>{:field=>'people_ssim', :multi_valued => true, :weight => 4},
-          :subjects=>{:field=>'subjects_ssim', :multi_valued => true, :weight => 1},
+          :subjects=>{:field=>'subjects_ssim', :multi_valued => true},
           :city_section=>{:field=>'city_sections_ssi'},
           :city=>{:field=>'cities_ssi'},
           :state=>{:field=>'states_ssi'},
