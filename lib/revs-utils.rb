@@ -66,7 +66,8 @@ module Revs
           :highlighted=>{:field=>'highlighted_ssi',:editstore=>false},
           :visibility_value=>{:field=>'visibility_isi',:editstore=>false},
           :score=>{:field=>'score_isi', :editstore=>false},
-          :timestamp=>{:field=>'timestamp', :editstore=>false}
+          :timestamp=>{:field=>'timestamp', :editstore=>false},
+          :resaved_at=>{:field=>'resaved_at_ssi', :editstore=>false}
         }  
       end  
 

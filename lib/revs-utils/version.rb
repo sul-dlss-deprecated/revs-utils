@@ -1,5 +1,5 @@
 module Revs
   module Utils
-    VERSION = "2.1.5"
+    VERSION = "2.1.6"
   end
 end
