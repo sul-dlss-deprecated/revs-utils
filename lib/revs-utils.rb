@@ -68,7 +68,7 @@ module Revs
           :collection_names=>{:field=>'collection_ssim', :multi_valued => true,:editstore=>false},
           :archive_name=>{:field=>'archive_ssi',:editstore=>false},
           :highlighted=>{:field=>'highlighted_ssi',:editstore=>false},
-          :visibility_value=>{:field=>'visibility_isi'},
+          :visibility_value=>{:field=>'visibility_isi', :editstore=>false},
           :score=>{:field=>'score_isi', :editstore=>false},
           :timestamp=>{:field=>'timestamp', :editstore=>false},
           :resaved_at=>{:field=>'resaved_at_ssi', :editstore=>false}
