@@ -95,18 +95,31 @@ module Revs
       # pass in csv data and it will tell if you everything is safe to register based on having labels, unique sourceIDs and filenames matching sourceIDs
       def check_valid_to_register(csv_data)
         #Make sure all the required headers are there
-        return false if not get_manifest_section(REGISTER).values-csv_data[0].keys == []
+        result1=result2=result3=result4=true
+        if not get_manifest_section(REGISTER).values-csv_data[0].keys == []
+          puts "missing headers required for registration"
+          result1=false
+        end
         sources=Array.new
         #Make sure all files have entries for those required headers
         csv_data.each do |row|
           get_manifest_section(REGISTER).keys.each do |header| # label should be there as a column but does not always need a value
-            return false if header.downcase !='label' && row[header].blank? #Alternatively consider row[header].class != String or row[header].size <= 0
+             if header.downcase !='label' && row[header].blank? 
+               puts "#{row[get_manifest_section(REGISTER)['sourceid']]} does not have a value for a required registration field"
+               result2=false
+             end
           end
           fname = row[get_manifest_section(REGISTER)['filename']].chomp(File.extname(row[get_manifest_section(REGISTER)['filename']]))
-          return false if ((row[get_manifest_section(REGISTER)['sourceid']] != fname) || ((/\s/ =~ row[get_manifest_section(REGISTER)['sourceid']].strip) != nil))  
+          if ((row[get_manifest_section(REGISTER)['sourceid']] != fname) || ((/\s/ =~ row[get_manifest_section(REGISTER)['sourceid']].strip) != nil))  
+            puts "#{row[get_manifest_section(REGISTER)['sourceid']]} does not match the filename or has a space in it"            
+            result3=false
+          end
           sources << row[get_manifest_section(REGISTER)['sourceid']]
         end
-        return sources.uniq.size == sources.size
+        result4 = (sources.uniq.size == sources.size)
+        puts "sourceIDs are not all unique" unless result4
+        return (result1 && result2 && result3 && result4)
+        
       end
       
       # looks at certain metadata fields in manifest to confirm validity (such as dates and formats)
@@ -115,22 +128,35 @@ module Revs
         csv_data.each do |row|
           valid_date=revs_is_valid_datestring?(row[get_manifest_section(METADATA)['year']] || row[get_manifest_section(METADATA)['date']])
           valid_format=revs_is_valid_format?(row[get_manifest_section(METADATA)['format']])
-          bad_rows+=1 unless (valid_date && valid_format)
+          unless (valid_date && valid_format)
+            bad_rows+=1 
+            puts "#{row[get_manifest_section(REGISTER)['sourceid']]} has a bad year/date or format"
+          end
         end
         return bad_rows
       end
       
       # pass in csv data from a file read in and it will tell you if the headers are valid
       def check_headers(csv_data)
+        
+        result1=result2=true
         file_headers=csv_data[0].keys.reject(&:blank?).collect(&:downcase)
         #The file doesn't need to have all the metadata values, it just can't have headers that aren't used for metadata or registration
         if file_headers.include?('date') && file_headers.include?('year') # can't have both date and year 
-          return false
-        elsif file_headers.include?('location') && file_headers.include?('state') && file_headers.include?('city') && file_headers.include?('country') # can't have both location and the specific fields
-          return false
-        else
-          return file_headers-get_manifest_section(METADATA).values-get_manifest_section(REGISTER).values == []
+          puts "has both year and date columns"
+          result1=false
         end
+        if file_headers.include?('location') && file_headers.include?('state') && file_headers.include?('city') && file_headers.include?('country') # can't have both location and the specific fields
+          puts "has location column as well as specific state,city,country columns"
+          result2=false
+        end
+        extra_columns = file_headers-get_manifest_section(METADATA).values-get_manifest_section(REGISTER).values
+        has_extra_columns = (extra_columns == [])
+        puts "has unknown columns: #{extra_columns.join(', ')}" unless has_extra_columns
+        result3 = has_extra_columns
+        
+        return (result1 && result2 && result3)
+        
       end
       
       def clean_collection_name(name)
