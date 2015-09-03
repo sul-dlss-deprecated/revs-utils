@@ -22,6 +22,8 @@ Shared methods and functions used by revs-indexer, pre-assembly and bulk metadat
 - <b>1.0.10</b> Update valid for metadata method so it is not sensitive to blank or uppercase columns
 - <b>1.0.11</b> Fix issues with year parsing
 - <b>1.0.12</b> Allow two digit years in year formatting
+- <b>1.0.19</b> Display output showing reasons for validation failures when checking manifests
+- <b>1.0.20</b> Allow for optional metadata columns in the manifest
 
 == Running tests
 

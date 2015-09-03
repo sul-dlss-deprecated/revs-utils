@@ -14,6 +14,7 @@ REVS_LC_TERMS_FILENAME=File.join(PROJECT_ROOT,'files','revs-lc-marque-terms.obj'
 REVS_MANIFEST_HEADERS_FILEPATH = File.join(PROJECT_ROOT,'config',"manifest_headers.yml")
 REGISTER = "register"
 METADATA = "metadata"
+OPTIONAL = "metadata_optional"
 FORMATS = "known_formats"
 
 module Revs
@@ -23,7 +24,7 @@ module Revs
       # a hash of LC Subject Heading terms and their IDs for linking for "Automobiles" http://id.loc.gov/authorities/subjects/sh85010201.html
       # this is cached and loaded from disk and deserialized back into a hash for performance reasons, then stored as a module
       # level constant so it can be reused throughout the pre-assembly run as a constant
-      #  This cached set of terms can be re-generated with "ruby devel/revs_lc_automobile_terms.rb"
+      #  This cached set of terms can be re-generated with "ruby bin/revs_lc_automobile_terms.rb"
       AUTOMOBILE_LC_TERMS= File.open(REVS_LC_TERMS_FILENAME,'rb'){|io| Marshal.load(io)} if File.exists?(REVS_LC_TERMS_FILENAME)
       REVS_MANIFEST_HEADERS_FILE = File.open(REVS_MANIFEST_HEADERS_FILEPATH)
       REVS_MANIFEST_HEADERS = YAML.load( REVS_MANIFEST_HEADERS_FILE)
@@ -150,7 +151,7 @@ module Revs
           puts "has location column as well as specific state,city,country columns"
           result2=false
         end
-        extra_columns = file_headers-get_manifest_section(METADATA).values-get_manifest_section(REGISTER).values
+        extra_columns = file_headers-get_manifest_section(METADATA).values-get_manifest_section(REGISTER).values-get_manifest_section(OPTIONAL).values
         has_extra_columns = (extra_columns == [])
         puts "has unknown columns: #{extra_columns.join(', ')}" unless has_extra_columns
         result3 = has_extra_columns
