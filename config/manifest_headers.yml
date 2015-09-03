@@ -30,6 +30,8 @@ metadata:
   hide: hide
   format: format
   collection_name: collection_name
+metadata_optional:
+  format_authority: format_authority
 known_formats: 
   - black-and-white film
   - color film
@@ -42,3 +44,4 @@ known_formats:
   - color negatives
   - black-and-white transparencies
   - color transparencies
+  - Glass negatives
