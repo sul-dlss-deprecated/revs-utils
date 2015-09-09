@@ -26,6 +26,7 @@ Shared methods and functions used by revs-indexer, pre-assembly and bulk metadat
 - <b>2.1.0 - 2.1.4</b> Add field mapping and other common methods used in both revs digital library and revs-indexing
 - <b>2.1.10</b> Display output showing reasons for validation failures when checking manifests
 - <b>2.1.11</b> Allow for optional metadata columns in the manifest
+- <b>2.1.12</b> Score computation should work with any kind of hash key
 
 == Running tests
 

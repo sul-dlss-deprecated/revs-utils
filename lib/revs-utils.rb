@@ -78,12 +78,14 @@ module Revs
 
       # these are used in the revs solr document in the main revs digital library rails app, as well as the revs-indexing-service app
       def revs_location(doc_hash)
+        doc_hash=doc_hash.with_indifferent_access
         [doc_hash[:city_sections_ssi],doc_hash[:cities_ssi],doc_hash[:states_ssi],doc_hash[:countries_ssi]].reject(&:blank?).join(', ')
       end  
   
       # these are used in the revs solr document in the main revs digital library rails app, as well as the revs-indexing-service app
       def revs_compute_score(doc_hash)
 
+        doc_hash=doc_hash.with_indifferent_access
         total_score=0
         total_weights=0
         revs_field_mappings.each do |field_name,field_config|
