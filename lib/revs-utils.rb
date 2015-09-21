@@ -118,7 +118,10 @@ module Revs
           sources << row[get_manifest_section(REGISTER)['sourceid']]
         end
         result4 = (sources.uniq.size == sources.size)
-        puts "sourceIDs are not all unique" unless result4
+        unless result4
+          puts "sourceIDs are not all unique" 
+          puts sources.uniq.map { | e | [sources.count(e), e] }.select { | c, _ | c > 1 }.sort.reverse.map { | c, e | "#{e}: #{c}" } # show all non-unique sourceIDs and their frequency
+        end
         return (result1 && result2 && result3 && result4)
         
       end
