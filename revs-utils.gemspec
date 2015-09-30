@@ -24,7 +24,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency "chronic"
   
   gem.add_development_dependency "rspec", "~> 2.6"
-  gem.add_development_dependency "lyberteam-gems-devel", "> 1.0.0"
   gem.add_development_dependency "yard"
   
 end
