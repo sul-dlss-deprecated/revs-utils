@@ -1,4 +1,7 @@
-{<img src="https://travis-ci.org/sul-dlss/revs-utils.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/sul-dlss/revs-utils]
+{<img src="https://travis-ci.org/sul-dlss/revs-utils.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/sul-dlss/revs-utils]  {<img src="https://coveralls.io/repos/sul-dlss/revs-utils/badge.svg?branch=master&service=github" alt="Coverage Status" />}[https://coveralls.io/github/sul-dlss/revs-utils?branch=master]
+
+
+
 = Revs::Utils
 
 Shared methods and functions used by revs-indexer, pre-assembly and bulk metadata loading code.
