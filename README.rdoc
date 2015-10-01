@@ -1,3 +1,4 @@
+{<img src="https://travis-ci.org/sul-dlss/revs-utils.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/sul-dlss/revs-utils]
 = Revs::Utils
 
 Shared methods and functions used by revs-indexer, pre-assembly and bulk metadata loading code.
