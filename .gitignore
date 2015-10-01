@@ -7,4 +7,5 @@ log/*
 pkg/*
 tags
 tmp
+coverage
 .yardoc/*
