@@ -56,6 +56,7 @@ GEM
       rails-deprecated_sanitizer (>= 1.0.1)
     rails-html-sanitizer (1.0.2)
       loofah (~> 2.0)
+    rake (10.4.2)
     rdf (1.1.15)
       link_header (~> 0.0, >= 0.0.8)
     rspec (2.99.0)
@@ -75,6 +76,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  rake
   revs-utils!
   rspec (~> 2.6)
   yard
