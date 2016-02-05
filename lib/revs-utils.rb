@@ -19,7 +19,7 @@ FORMATS = "known_formats"
 
 module Revs
   module Utils
-        
+
       # a hash of LC Subject Heading terms and their IDs for linking for "Automobiles" http://id.loc.gov/authorities/subjects/sh85010201.html
       # this is cached and loaded from disk and deserialized back into a hash for performance reasons, then stored as a module
       # level constant so it can be reused throughout the pre-assembly run as a constant
@@ -31,7 +31,7 @@ module Revs
       ARCHIVE_DRUIDS={:revs=>'nt028fd5773',:roadandtrack=>'mr163sv5231'}  # a hash of druids of the master archives, keys are arbitrary but druids must match the druids in DOR
                                                                           #  these druids will be used to set the archive name in each document
       MULTI_COLLECTION_ARCHIVES=[:revs] # list the keys from the hash above for any archives that contain multiple collections (like Revs), for which each item in DOR belongs to both a parent collection and the master archive collection ... since we do not want to also add the master archive name as another collection druid to each record, we skip them
-  
+
       # these are used in the revs solr document in the main revs digital library rails app, as well as the revs-indexing-service app
       def revs_field_mappings
         {
@@ -60,6 +60,7 @@ module Revs
           :current_owner=>{:field=>'current_owner_tsi', :weight => 1},
           :entrant=>{:field=>'entrant_ssim', :multi_valued => true, :weight => 1},
           :venue=>{:field=>'venue_ssi'},
+          :engine_type=>{:field=>'engine_type_ssi'},
           :track=>{:field=>'track_ssi', :weight => 1},
           :event=>{:field=>'event_ssi'},
           :group_class=>{:field=>'group_class_tsi', :weight => 1},
@@ -73,15 +74,15 @@ module Revs
           :score=>{:field=>'score_isi', :editstore=>false},
           :timestamp=>{:field=>'timestamp', :editstore=>false},
           :resaved_at=>{:field=>'resaved_at_ssi', :editstore=>false}
-        }  
-      end  
+        }
+      end
 
       # these are used in the revs solr document in the main revs digital library rails app, as well as the revs-indexing-service app
       def revs_location(doc_hash)
         doc_hash=doc_hash.with_indifferent_access
         [doc_hash[:city_sections_ssi],doc_hash[:cities_ssi],doc_hash[:states_ssi],doc_hash[:countries_ssi]].reject(&:blank?).join(', ')
-      end  
-  
+      end
+
       # these are used in the revs solr document in the main revs digital library rails app, as well as the revs-indexing-service app
       def revs_compute_score(doc_hash)
 
@@ -100,80 +101,80 @@ module Revs
         location_weight = 3
         total_weights += location_weight
         total_score += (location_score * location_weight)
-    
+
         return ((total_score/total_weights)*100).ceil
 
       end
 
       # tells you if have a blank value or an array that has just blank values
       def blank_value?(value)
-         value.class == Array ? !value.delete_if(&:blank?).any? : value.blank? 
+         value.class == Array ? !value.delete_if(&:blank?).any? : value.blank?
       end
-                  
+
       def revs_known_formats
         get_manifest_section(FORMATS)
       end
-      
+
       def get_manifest_section(section)
         return REVS_MANIFEST_HEADERS[section]
       end
-      
+
       def manifest_headers_file()
         return REVS_MANIFEST_HEADERS_FILE
       end
-      
+
       def manifest_headers_path()
         return MAINFEST_HEADERS_FILEPATH
       end
-      
+
       def manifest_register_section_name()
         return REGISTER
       end
-      
+
       def manifest_metadata_section_name()
         return METADATA
       end
-      
+
       def read_csv_with_headers(file)
         # load CSV into an array of hashes, allowing UTF-8 to pass through, deleting blank columns
-        #file_contents = IO.read(file).force_encoding("ISO-8859-1").encode("utf-8", replace: nil) 
+        #file_contents = IO.read(file).force_encoding("ISO-8859-1").encode("utf-8", replace: nil)
         file_contents = IO.read(file)
         csv = CSV.parse(file_contents, :headers => true)
         return csv.map { |row| row.to_hash.with_indifferent_access }
       end
-      
-      #Pass this function a list of all CSVs containing metadata for files you are about to register and it will ensure each sourceid is unique 
+
+      #Pass this function a list of all CSVs containing metadata for files you are about to register and it will ensure each sourceid is unique
       def unique_source_ids(file_paths)
         files = Array.new
         file_paths.each do |fp|
           files << read_csv_with_headers(fp)
         end
-        
+
         sources = Array.new
         files.each do |file|
           file.each do |row|
             #Make sure the sourceid and filename are the same
             fname = row[get_manifest_section(REGISTER)['filename']].chomp(File.extname(row[get_manifest_section(REGISTER)['filename']]))
-            return false if ((row[get_manifest_section(REGISTER)['sourceid']] != fname) || ((/\s/ =~ row[get_manifest_section(REGISTER)['sourceid']].strip) != nil))  
+            return false if ((row[get_manifest_section(REGISTER)['sourceid']] != fname) || ((/\s/ =~ row[get_manifest_section(REGISTER)['sourceid']].strip) != nil))
             sources << row[get_manifest_section(REGISTER)['sourceid']]
-          end         
+          end
         end
         return sources.uniq.size == sources.size
-      
+
       end
-            
+
       #Pass this function a CSV file and it will return true if the proper headers are there and each entry has the required fields filled in
       def valid_to_register(file_path)
         file = read_csv_with_headers(file_path)
         return check_valid_to_register(file)
       end
-      
-      #Pass this function a CSV file and it will return true if the proper headers are there and each entry has the required fields filled in.  
+
+      #Pass this function a CSV file and it will return true if the proper headers are there and each entry has the required fields filled in.
       def valid_for_metadata(file_path)
         file = read_csv_with_headers(file_path)
         return check_headers(file)
       end
-      
+
       # pass in csv data and it will tell if you everything is safe to register based on having labels, unique sourceIDs and filenames matching sourceIDs
       def check_valid_to_register(csv_data)
         #Make sure all the required headers are there
@@ -186,27 +187,27 @@ module Revs
         #Make sure all files have entries for those required headers
         csv_data.each do |row|
           get_manifest_section(REGISTER).keys.each do |header| # label should be there as a column but does not always need a value
-             if header.downcase !='label' && row[header].blank? 
+             if header.downcase !='label' && row[header].blank?
                puts "#{row[get_manifest_section(REGISTER)['sourceid']]} does not have a value for a required registration field"
                result2=false
              end
           end
           fname = row[get_manifest_section(REGISTER)['filename']].chomp(File.extname(row[get_manifest_section(REGISTER)['filename']]))
-          if ((row[get_manifest_section(REGISTER)['sourceid']] != fname) || ((/\s/ =~ row[get_manifest_section(REGISTER)['sourceid']].strip) != nil))  
-            puts "#{row[get_manifest_section(REGISTER)['sourceid']]} does not match the filename or has a space in it"            
+          if ((row[get_manifest_section(REGISTER)['sourceid']] != fname) || ((/\s/ =~ row[get_manifest_section(REGISTER)['sourceid']].strip) != nil))
+            puts "#{row[get_manifest_section(REGISTER)['sourceid']]} does not match the filename or has a space in it"
             result3=false
           end
           sources << row[get_manifest_section(REGISTER)['sourceid']]
         end
         result4 = (sources.uniq.size == sources.size)
         unless result4
-          puts "sourceIDs are not all unique" 
+          puts "sourceIDs are not all unique"
           puts sources.uniq.map { | e | [sources.count(e), e] }.select { | c, _ | c > 1 }.sort.reverse.map { | c, e | "#{e}: #{c}" } # show all non-unique sourceIDs and their frequency
         end
         return (result1 && result2 && result3 && result4)
-        
+
       end
-      
+
       # looks at certain metadata fields in manifest to confirm validity (such as dates and formats)
       def check_metadata(csv_data)
         bad_rows=0
@@ -214,20 +215,20 @@ module Revs
           valid_date=revs_is_valid_datestring?(row[get_manifest_section(METADATA)['year']] || row[get_manifest_section(METADATA)['date']])
           valid_format=revs_is_valid_format?(row[get_manifest_section(METADATA)['format']])
           unless (valid_date && valid_format)
-            bad_rows+=1 
+            bad_rows+=1
             puts "#{row[get_manifest_section(REGISTER)['sourceid']]} has a bad year/date or format"
           end
         end
         return bad_rows
       end
-      
+
       # pass in csv data from a file read in and it will tell you if the headers are valid
       def check_headers(csv_data)
-        
+
         result1=result2=true
         file_headers=csv_data[0].keys.reject(&:blank?).collect(&:downcase)
         #The file doesn't need to have all the metadata values, it just can't have headers that aren't used for metadata or registration
-        if file_headers.include?('date') && file_headers.include?('year') # can't have both date and year 
+        if file_headers.include?('date') && file_headers.include?('year') # can't have both date and year
           puts "has both year and date columns"
           result1=false
         end
@@ -239,11 +240,11 @@ module Revs
         has_extra_columns = (extra_columns == [])
         puts "has unknown columns: #{extra_columns.join(', ')}" unless has_extra_columns
         result3 = has_extra_columns
-        
+
         return (result1 && result2 && result3)
-        
+
       end
-      
+
       def clean_collection_name(name)
         return "" if name.blank? || name.nil?
         name=name.to_s
@@ -262,12 +263,12 @@ module Revs
         name.gsub!(/(automobile)\z/i,'')
         return name.strip
       end
-            
+
       def parse_location(row, location)
         row[location].split(/[,|]/).reverse.each do |local|
           country = revs_get_country(local)
-          city_state = revs_get_city_state(local) 
-          row['country'] = country.strip if country 
+          city_state = revs_get_city_state(local)
+          row['country'] = country.strip if country
           if city_state
             row['state'] = revs_get_state_name(city_state[1].strip)
             row['city'] = city_state[0].strip
@@ -286,12 +287,12 @@ module Revs
         formats=format.split("|").collect{|f| f.strip}
         !formats.collect {|f| revs_known_formats.include?(f)}.uniq.include?(false)
       end
-      
+
       # check a single format and fix some common issues
       def revs_check_format(format)
         return revs_check_formats([format]).first
       end
-      
+
       # check the incoming array of formats and fix some common issues
       def revs_check_formats(format)
         known_fixes = {"black-and-white negative"=>"black-and-white negatives",
@@ -300,14 +301,14 @@ module Revs
                        "color negatives/slides"=>"color negatives",
                        "black-and-white negative strips"=>"black-and-white negatives",
                        "black and white"=>"black-and-white negatives",
-                       "black-and-white"=>"black-and-white negatives",                       
+                       "black-and-white"=>"black-and-white negatives",
                        "black and white negative"=>"black-and-white negatives",
                        "black and white negatives"=>"black-and-white negatives",
                        "color transparency"=>"color transparencies",
                        "slide"=>"slides",
                        "color transparancies"=>"color transparencies"
                      }
-        count = 0 
+        count = 0
         format.each do |f|
           format[count] = known_fixes[f.downcase] || f.downcase
           count += 1
@@ -320,8 +321,8 @@ module Revs
         result=false
         variants1=[marque,marque.capitalize,marque.singularize,marque.pluralize,marque.capitalize.singularize,marque.capitalize.pluralize]
         variants2=[]
-        variants1.each do |name| 
-          variants2 << "#{name} automobile" 
+        variants1.each do |name|
+          variants2 << "#{name} automobile"
           variants2 << "#{name} automobiles"
         end
         (variants1+variants2).each do |variant|
@@ -339,7 +340,7 @@ module Revs
         name='US' if name=='USA' # special case; USA is not recognized by the country gem, but US is
         country=Country.find_country_by_name(name.strip) # find it by name
         code=Country.new(name.strip) # find it by code
-        if country.nil? && code.data.nil? 
+        if country.nil? && code.data.nil?
           return false
         else
           return (code.data.nil? ? country.name : code.name)
@@ -385,7 +386,7 @@ module Revs
         is_year=!parse_years(date_string).empty?
         return is_year || is_full_date
       end
-      
+
       # tell us if the string passed is in is a full date of the format M/D/YYYY or m-d-yyyy or m-d-yy or M/D/YY, and returns the date object if it is valid
       def get_full_date(date_string)
         begin
@@ -413,7 +414,7 @@ module Revs
           if year.scan(/[1-2][0-9][0-9][0-9][-][0-9][0-9]/).size > 0 && year.size == 7 # if we have a year that looks like "1961-62" or "1961-73", lets deal with it turning it into [1961,1962] or [1961,1962,1963,1964,1965,1966,1967...etc]
             start_year=year[2..3]
             end_year=year[5..6]
-            stem=year[0..1] 
+            stem=year[0..1]
             for n in start_year..end_year
               years_to_add << "#{stem}#{n}"
             end
