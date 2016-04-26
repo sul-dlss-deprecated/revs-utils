@@ -30,9 +30,10 @@ metadata:
   hide: hide
   format: format
   collection_name: collection_name
+  engine_type: engine_type
 metadata_optional:
   format_authority: format_authority
-known_formats: 
+known_formats:
   - black-and-white film
   - color film
   - slides

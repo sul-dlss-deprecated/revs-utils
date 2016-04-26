@@ -22,7 +22,7 @@ Shared methods and functions used by revs-indexer, pre-assembly and bulk metadat
 - <b>1.0.6</b> Add some more conditions to CSV header checks
 - <b>1.0.7</b> Label column needs to be there but does not need to have a value to register
 - <b>1.0.8</b> Update clean_collection_name method to deal with other possible names
-- <b>2.0.0</b> Updating to use ActionPack 4 for Rails 4 applications.  For Rails 3, continue to use 1.x.y releases.  
+- <b>2.0.0</b> Updating to use ActionPack 4 for Rails 4 applications.  For Rails 3, continue to use 1.x.y releases.
 - <b>2.0.1</b> Add more common format corrections
 - <b>2.0.2 and 2.0.3</b> Update valid for metadata method so it is not sensitive to blank or uppercase columns
 - <b>2.0.4</b> Fix issues with year parsing
@@ -32,6 +32,7 @@ Shared methods and functions used by revs-indexer, pre-assembly and bulk metadat
 - <b>2.1.11</b> Allow for optional metadata columns in the manifest
 - <b>2.1.12</b> Score computation should work with any kind of hash key
 - <b>2.1.13</b> Add more information when sourceIDs are not unique
+- <b>2.1.14-15</b> Add new engine-type field
 
 == Running tests
 
@@ -70,6 +71,5 @@ Or install it yourself as:
 
 1. Check out Gem code.
 2. CD into Gem directory
-3. ruby bin/revs_lc_automobile_terms.rb 
+3. ruby bin/revs_lc_automobile_terms.rb
 4. Update Gem in git, bump version number and rake dlss_release
-

@@ -228,7 +228,7 @@ describe "Revs-Utils" do
      @revs.get_manifest_section(@revs.manifest_metadata_section_name()).size.should > 0
      (@revs.get_manifest_section(@revs.manifest_metadata_section_name()).keys - ["marque", "model", "people", "entrant", "photographer", "current_owner", "venue", "track", "event",
             "location", "year", "description", "model_year", "model_year", "group_or_class", "race_data", "metadata_sources","state", "country", "city", "date",
-            "vehicle_markings", "inst_notes", "prod_notes", "has_more_metadata", "hide", "format", "collection_name"]).should == []
+            "vehicle_markings", "inst_notes", "prod_notes", "has_more_metadata", "hide", "format", "collection_name", "engine_type"]).should == []
   end
 
   it "should return when true when given a clean sheet to check for headers required for registration and metadata updating" do
