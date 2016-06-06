@@ -33,6 +33,7 @@ Shared methods and functions used by revs-indexer, pre-assembly and bulk metadat
 - <b>2.1.12</b> Score computation should work with any kind of hash key
 - <b>2.1.13</b> Add more information when sourceIDs are not unique
 - <b>2.1.14-15</b> Add new engine-type field
+- <b>2.1.16-17</b> Add new format authority field and update acceptable formats
 
 == Running tests
 
