@@ -72,6 +72,7 @@ describe "Revs-Utils" do
 
    it "should clean up some common format errors from that are uppercase and then lower case everything" do
      @revs.revs_check_format('Color Transparency').should == 'color transparencies'
+     @revs.revs_check_format('Glass negatives').should == 'glass negatives'
      @revs.revs_check_format('Leave Alone').should == 'leave alone'
    end
 
@@ -113,9 +114,10 @@ describe "Revs-Utils" do
     @revs.revs_is_valid_format?(nil).should be_truthy
     @revs.revs_is_valid_format?('').should be_truthy
     @revs.revs_is_valid_format?('slides').should be_truthy
+    @revs.revs_is_valid_format?('glass negatives').should be_truthy
     @revs.revs_is_valid_format?('slide').should be_falsey
     @revs.revs_is_valid_format?('slides | slide').should be_falsey
-    @revs.revs_is_valid_format?('slides | black-and-white negatives').should be_truthy
+    @revs.revs_is_valid_format?('slides | black-and-white negatives | Glass negatives').should be_truthy
     @revs.revs_is_valid_format?('black-and-white-negatives').should be_falsey
     @revs.revs_is_valid_format?('black-and-white negatives').should be_truthy
   end
@@ -228,7 +230,7 @@ describe "Revs-Utils" do
      @revs.get_manifest_section(@revs.manifest_metadata_section_name()).size.should > 0
      (@revs.get_manifest_section(@revs.manifest_metadata_section_name()).keys - ["marque", "model", "people", "entrant", "photographer", "current_owner", "venue", "track", "event",
             "location", "year", "description", "model_year", "model_year", "group_or_class", "race_data", "metadata_sources","state", "country", "city", "date",
-            "vehicle_markings", "inst_notes", "prod_notes", "has_more_metadata", "hide", "format", "collection_name", "engine_type"]).should == []
+            "vehicle_markings", "inst_notes", "prod_notes", "has_more_metadata", "hide", "format", "format_authority", "collection_name", "engine_type"]).should == []
   end
 
   it "should return when true when given a clean sheet to check for headers required for registration and metadata updating" do
