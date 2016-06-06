@@ -29,6 +29,7 @@ metadata:
   has_more_metadata: has_more_metadata
   hide: hide
   format: format
+  format_authority: format_authority
   collection_name: collection_name
   engine_type: engine_type
 metadata_optional:
@@ -46,3 +47,4 @@ known_formats:
   - black-and-white transparencies
   - color transparencies
   - glass negatives
+  - Glass negatives
