@@ -63,7 +63,9 @@ module Revs
           :engine_type=>{:field=>'engine_type_ssi'},
           :track=>{:field=>'track_ssi', :weight => 1},
           :event=>{:field=>'event_ssi'},
-          :group_class=>{:field=>'group_class_tsi', :weight => 1},
+          :group_class=>{:field=>'group_class_tsi', :weight => 1}, # this field is being split into two separate fields, but we are keeping the old field until all data is migrated # July 2016 Peter Mangiafico
+          :car_group=>{:field=>'group_ssi', :weight => 1},
+          :car_class=>{:field=>'class_ssi', :weight => 1},
           :race_data=>{:field=>'race_data_tsi', :weight => 1},
           :priority=>{:field=>'priority_isi',:default=>0,:editstore=>false},
           :collections=>{:field=>'is_member_of_ssim', :multi_valued => true},
