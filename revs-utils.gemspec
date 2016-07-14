@@ -12,19 +12,19 @@ Gem::Specification.new do |gem|
   gem.summary       = "Shared methods and functions used by revs-indexer, pre-assembly and bulk metadata loading code."
   gem.homepage      = ""
   gem.license       = "All rights reserved, Stanford University."
-  
+
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
-  
+
   gem.add_dependency "countries", "0.9.2"
   gem.add_dependency "rdf"
-  gem.add_dependency "actionpack", '>= 4.1.6'
+  gem.add_dependency "actionpack", '~> 4' # projects that depend on this may not have upgraded to rails 5 yet
   gem.add_dependency "chronic"
   gem.add_dependency "rake"
-  
+
   gem.add_development_dependency "rspec", "~> 2.6"
   gem.add_development_dependency "yard"
-  
+
 end
