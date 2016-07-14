@@ -21,6 +21,8 @@ metadata:
   description: description
   model_year: model_year
   group_or_class: group_or_class
+  group: group
+  class: class
   race_data: race_data
   metadata_sources: metadata_sources
   vehicle_markings: vehicle_markings
