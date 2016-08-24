@@ -35,7 +35,7 @@ Shared methods and functions used by revs-indexer, pre-assembly and bulk metadat
 - <b>2.1.14-15</b> Add new engine-type field
 - <b>2.1.16-17</b> Add new format authority field and update acceptable formats
 - <b>2.1.18-19</b> Add support for newly split apart group and class fields
-- <b>2.1.20</b> Group field made multivalued
+- <b>2.1.20-21</b> Group field made multivalued
 
 == Running tests
 
