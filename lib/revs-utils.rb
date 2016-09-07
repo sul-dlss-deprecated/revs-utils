@@ -48,6 +48,7 @@ module Revs
           :state=>{:field=>'states_ssi'},
           :country=>{:field=>'countries_ssi'},
           :formats=>{:field=>'format_ssim', :multi_valued => true},
+          :original_size=>{:field=>'original_size_ssi'},
           :identifier=>{:field=>'source_id_ssi'},
           :production_notes=>{:field=>'prod_notes_tsi'},
           :institutional_notes=>{:field=>'inst_notes_tsi'},
@@ -64,7 +65,7 @@ module Revs
           :track=>{:field=>'track_ssi', :weight => 1},
           :event=>{:field=>'event_ssi'},
           :group_class=>{:field=>'group_class_tsi', :weight => 1}, # this field is being split into two separate fields, but we are keeping the old field until all data is migrated # July 2016 Peter Mangiafico
-          :car_group=>{:field=>'group_ssi', :weight => 1},
+          :car_group=>{:field=>'group_ssim', :multi_valued => true, :weight => 1},
           :car_class=>{:field=>'class_ssi', :weight => 1},
           :race_data=>{:field=>'race_data_tsi', :weight => 1},
           :priority=>{:field=>'priority_isi',:default=>0,:editstore=>false},

@@ -31,6 +31,7 @@ metadata:
   has_more_metadata: has_more_metadata
   hide: hide
   format: format
+  original_size: original_size
   format_authority: format_authority
   collection_name: collection_name
   engine_type: engine_type
