@@ -48,6 +48,7 @@ module Revs
           :state=>{:field=>'states_ssi'},
           :country=>{:field=>'countries_ssi'},
           :formats=>{:field=>'format_ssim', :multi_valued => true},
+          :original_size=>{:field=>'original_size_ssi'},
           :identifier=>{:field=>'source_id_ssi'},
           :production_notes=>{:field=>'prod_notes_tsi'},
           :institutional_notes=>{:field=>'inst_notes_tsi'},
