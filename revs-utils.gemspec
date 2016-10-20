@@ -20,7 +20,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency "countries", "~> 1.0"
   gem.add_dependency "rdf"
-  gem.add_dependency "actionpack", '~> 4' # projects that depend on this may not have upgraded to rails 5 yet
+  gem.add_dependency "actionpack", '>= 4', '< 6'
   gem.add_dependency "chronic"
   gem.add_dependency "rake"
 
