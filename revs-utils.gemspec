@@ -14,8 +14,9 @@ Gem::Specification.new do |gem|
   gem.license       = "All rights reserved, Stanford University."
 
   gem.files         = `git ls-files`.split($/)
-  gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
+  gem.bindir        = 'exe'
+  gem.executables   = gem.files.grep(%r{^exe/}) { |f| File.basename(f) }
   gem.require_paths = ["lib"]
 
   gem.add_dependency "countries", "~> 1.0"
