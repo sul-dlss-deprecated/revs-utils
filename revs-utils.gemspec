@@ -24,7 +24,8 @@ Gem::Specification.new do |gem|
   gem.add_dependency "chronic"
   gem.add_dependency "rake"
 
-  gem.add_development_dependency "rspec", "~> 2.6"
+  gem.add_development_dependency "rspec", "~> 3.0"
   gem.add_development_dependency "yard"
+
 
 end
