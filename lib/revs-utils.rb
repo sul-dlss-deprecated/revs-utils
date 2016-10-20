@@ -1,7 +1,7 @@
 # encoding: UTF-8
 
 require "revs-utils/version"
-require "countries"
+require "countries/global"
 require 'active_support/core_ext/string'
 require 'active_support/core_ext/hash'
 require 'csv'
@@ -341,14 +341,12 @@ module Revs
       # check if the string passed is a country name or code -- if so, return the country name, if not a recognized country, return false
       def revs_get_country(name)
         name='US' if name=='USA' # special case; USA is not recognized by the country gem, but US is
-        country=Country.find_country_by_name(name.strip) # find it by name
-        code=Country.new(name.strip) # find it by code
-        if country.nil? && code.data.nil?
-          return false
-        else
-          return (code.data.nil? ? country.name : code.name)
-        end
+        country = Country.new(name.strip) # find it by code
+        country ||= Country.find_country_by_name(name.strip) # find it by name
+
+        country.name unless country.nil?
       end # revs_get_country
+
 
       # parse a string like this: "San Mateo (Calif.)" to try and figure out if there is any state in there; if found, return the city and state as an array, if none found, return false
       def revs_get_city_state(name)
