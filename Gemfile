@@ -7,3 +7,5 @@ end
 
 # Specify your gem's dependencies in revs-utils.gemspec
 gemspec
+
+gem 'actionpack', ENV['RAILS_VERSION'] if ENV['RAILS_VERSION']
