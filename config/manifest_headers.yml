@@ -37,6 +37,17 @@ metadata:
   engine_type: engine_type
 metadata_optional:
   format_authority: format_authority
+  people1: people1
+  people2: people2
+  people3: people3
+  people4: people4
+  people5: people5
+  people6: people6
+  people7: people7
+  people8: people8
+  people9: people9
+  people10: people10
+
 known_formats:
   - black-and-white film
   - color film
