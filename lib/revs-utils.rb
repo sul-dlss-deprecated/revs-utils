@@ -188,16 +188,16 @@ module Revs
         end
         sources=Array.new
         #Make sure all files have entries for those required headers
-        csv_data.each do |row|
+        csv_data.each_with_index do |row,i|
           get_manifest_section(REGISTER).keys.each do |header| # label should be there as a column but does not always need a value
              if header.downcase !='label' && row[header].blank?
-               puts "#{row[get_manifest_section(REGISTER)['sourceid']]} does not have a value for a required registration field"
+               puts "Row #{i}: #{row[get_manifest_section(REGISTER)['sourceid']]} does not have a value for a required registration field"
                result2=false
              end
           end
           fname = row[get_manifest_section(REGISTER)['filename']].chomp(File.extname(row[get_manifest_section(REGISTER)['filename']]))
           if ((row[get_manifest_section(REGISTER)['sourceid']] != fname) || ((/\s/ =~ row[get_manifest_section(REGISTER)['sourceid']].strip) != nil))
-            puts "#{row[get_manifest_section(REGISTER)['sourceid']]} does not match the filename or has a space in it"
+            puts "Row #{i}: #{row[get_manifest_section(REGISTER)['sourceid']]} does not match the filename or has a space in it"
             result3=false
           end
           sources << row[get_manifest_section(REGISTER)['sourceid']]
@@ -214,12 +214,12 @@ module Revs
       # looks at certain metadata fields in manifest to confirm validity (such as dates and formats)
       def check_metadata(csv_data)
         bad_rows=0
-        csv_data.each do |row|
+        csv_data.each_with_index do |row,i|
           valid_date=revs_is_valid_datestring?(row[get_manifest_section(METADATA)['year']] || row[get_manifest_section(METADATA)['date']])
           valid_format=revs_is_valid_format?(row[get_manifest_section(METADATA)['format']])
           unless (valid_date && valid_format)
             bad_rows+=1
-            puts "#{row[get_manifest_section(REGISTER)['sourceid']]} has a bad year/date or format"
+            puts "Row #{i}: #{row[get_manifest_section(REGISTER)['sourceid']]} has a bad year/date or format"
           end
         end
         return bad_rows
