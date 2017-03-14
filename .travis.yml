@@ -2,8 +2,12 @@ notifications:
   email: false
   
 rvm:
-  - 2.2.2
+  - 2.3.1
 
+matrix:
+  include:
+    - rvm: 2.2.2
+      env: RAILS_VERSION=4.2.7.1
 env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
