@@ -37,6 +37,7 @@ Shared methods and functions used by revs-indexer, pre-assembly and bulk metadat
 - <b>2.1.18-19</b> Add support for newly split apart group and class fields
 - <b>2.1.20-21</b> Group field made multivalued
 - <b>2.1.22</b> Add original size field
+- <b>2.2.0</b> Relax requirement for rails 4 
 
 == Running tests
 
@@ -48,14 +49,7 @@ bundle exec rspec spec
 2. Add to the release notes in this readme.
 3. Ensure the tests pass.
 4. Git commit and push
-5. Build the gem:
-
-gem build revs-utils.gemspec
-
-6. Release the gem to RubyGems:
-
-gem push revs-utils-2.0.1.gem  # substitute actual version number
-
+5. rake release
 
 == Installation
 
